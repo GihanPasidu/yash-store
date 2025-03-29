@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="YashStore - Premium handcrafted earrings collection. Find elegant and unique earrings for every occasion. Free shipping on orders over $50.">
+    <meta name="keywords" content="earrings, jewelry, handcrafted earrings, gold earrings, silver earrings, fashion accessories">
+    <meta name="author" content="CloudNextra Solution">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="YashStore - Exquisite Earrings Collection">
+    <meta property="og:description" content="Discover our handcrafted collection that adds sparkle to your style">
+    <meta property="og:image" content="images/og-image.jpg">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="YashStore - Exquisite Earrings Collection">
+    <meta name="twitter:description" content="Discover our handcrafted collection that adds sparkle to your style">
+    
+    <title>YashStore - Exquisite Earrings Collection</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/pages/products.css">
+    <link rel="stylesheet" href="css/pages/product-details.css">
+    <link rel="stylesheet" href="css/pages/cart.css">
+    
+    <!-- Schema.org markup -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "JewelryStore",
+        "name": "YashStore",
+        "image": "images/logo.png",
+        "description": "Premium handcrafted earrings collection",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "123 Main Street",
+            "addressLocality": "City",
+            "addressCountry": "Country"
+        },
+        "priceRange": "$$"
+    }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>YashStore</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="products.html">Shop</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="cart-icon">
+                <a href="cart.html"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Add mobile menu toggle button -->
+    <button class="mobile-menu-toggle" aria-label="Toggle Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <style>
+        .hero {
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                url('https://images.unsplash.com/photo-1615655406736-b37c4fabf923?w=1920&auto=format');
+        }
+    </style>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Elegant Earrings for Every Occasion</h2>
+                <p>Discover our handcrafted collection that adds sparkle to your style</p>
+                <a href="products.html" class="btn">Shop Now</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured">
+        <div class="container">
+            <h2 class="section-title">Featured Collection</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500" alt="Gold Hoop Earrings" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="add-to-cart" data-id="1">Add to Cart</button>
+                            <button class="view-details" data-id="1">View Details</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Gold Hoop Earrings</h3>
+                        <p class="price">$49.99</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1587467512961-120760940315?w=500" alt="Crystal Drop Earrings" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="add-to-cart" data-id="2">Add to Cart</button>
+                            <button class="view-details" data-id="2">View Details</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Crystal Drop Earrings</h3>
+                        <p class="price">$59.99</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1598560917505-59a3ad559071?w=500" alt="Pearl Stud Earrings" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="add-to-cart" data-id="3">Add to Cart</button>
+                            <button class="view-details" data-id="3">View Details</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Pearl Stud Earrings</h3>
+                        <p class="price">$39.99</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1630019852942-f89202989a59?w=500" alt="Silver Statement Earrings" loading="lazy">
+                        <div class="product-overlay">
+                            <button class="add-to-cart" data-id="4">Add to Cart</button>
+                            <button class="view-details" data-id="4">View Details</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Silver Statement Earrings</h3>
+                        <p class="price">$69.99</p>
+                    </div>
+                </div>
+            </div>
+            <div class="center">
+                <a href="products.html" class="btn">View All Products</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Customers Say</h2>
+            <div class="testimonial-slider">
+                <div class="testimonial">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p>"These earrings are absolutely gorgeous! I receive compliments every time I wear them. Great quality and fast shipping too!"</p>
+                    <p class="customer">- Sarah M.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>YashStore</h3>
+                    <p>Exquisite earrings for every style and occasion.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Shop</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Main Street, City, Country</p>
+                    <p><i class="fas fa-envelope"></i> info@yashstore.com</p>
+                    <p><i class="fas fa-phone"></i> +1 234 567 8900</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 YashStore. All rights reserved. Powered by CloudNextra Solution.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="js/main.js"></script>
+</body>
+</html>
