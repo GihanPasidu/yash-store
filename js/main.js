@@ -202,15 +202,32 @@ function updateQuantity(productId, newQuantity) {
 // Display cart on cart page
 function displayCart() {
     const cartContainer = document.getElementById('cart-items');
+    const cartSubtotal = document.getElementById('cart-subtotal');
     const cartTotal = document.getElementById('cart-total');
     
     if (!cartContainer || !cartTotal) return;
     
     if (cart.length === 0) {
-        cartContainer.innerHTML = '<p class="empty-cart">Your cart is empty. <a href="products.html">Continue shopping</a>.</p>';
+        cartContainer.innerHTML = `
+            <div class="cart-empty-placeholder">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Your cart is currently empty.</p>
+                <a href="products.html" class="btn">Continue Shopping</a>
+            </div>
+        `;
+        if (cartSubtotal) cartSubtotal.textContent = 'Rs 0.00';
         cartTotal.textContent = 'Rs 0.00';
+        
+        // Hide checkout button if cart is empty
+        const checkoutBtn = document.querySelector('.checkout-btn');
+        if (checkoutBtn) checkoutBtn.style.display = 'none';
+        
         return;
     }
+    
+    // Show checkout button if items in cart
+    const checkoutBtn = document.querySelector('.checkout-btn');
+    if (checkoutBtn) checkoutBtn.style.display = 'block';
     
     cartContainer.innerHTML = '';
     let total = 0;
@@ -234,14 +251,19 @@ function displayCart() {
                     <input type="number" value="${item.quantity}" min="1" class="quantity-input" data-id="${item.id}">
                     <button class="quantity-btn plus" data-id="${item.id}">+</button>
                 </div>
-                <p class="item-total">Total: Rs ${itemTotal.toFixed(2)}</p>
-                <button class="remove-item" data-id="${item.id}">Remove</button>
+                <button class="remove-item" data-id="${item.id}">
+                    <i class="fas fa-trash"></i> Remove
+                </button>
+            </div>
+            <div class="cart-item-price">
+                <p class="item-total">Rs ${itemTotal.toFixed(2)}</p>
             </div>
         `;
         
         cartContainer.appendChild(cartItem);
     });
     
+    if (cartSubtotal) cartSubtotal.textContent = `Rs ${total.toFixed(2)}`;
     cartTotal.textContent = `Rs ${total.toFixed(2)}`;
     
     // Add event listeners for quantity controls and remove buttons
@@ -275,6 +297,29 @@ function displayCart() {
             removeFromCart(id);
         });
     });
+    
+    // Add promo code functionality
+    const applyPromoBtn = document.getElementById('apply-promo');
+    if (applyPromoBtn) {
+        applyPromoBtn.addEventListener('click', function() {
+            const promoInput = document.getElementById('promo-code');
+            const discountAmount = document.getElementById('discount-amount');
+            
+            if (promoInput && promoInput.value.trim() !== '') {
+                // Simple promo code implementation - 10% discount for "YASH10"
+                if (promoInput.value.trim().toUpperCase() === 'YASH10') {
+                    const discount = total * 0.1;
+                    if (discountAmount) discountAmount.textContent = `Rs ${discount.toFixed(2)}`;
+                    cartTotal.textContent = `Rs ${(total - discount).toFixed(2)}`;
+                    showNotification('Promo code applied successfully!', 'success');
+                } else {
+                    showNotification('Invalid promo code', 'error');
+                }
+            } else {
+                showNotification('Please enter a promo code', 'error');
+            }
+        });
+    }
 }
 
 // Improved image loading handler

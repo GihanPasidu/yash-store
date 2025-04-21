@@ -38,39 +38,82 @@
     <section class="cart-container">
         <div class="container">
             <div class="cart-grid">
-                <div id="cart-items">
+                <div id="cart-items" class="cart-items-container">
                     <!-- Cart items will be dynamically loaded here -->
+                    <div class="cart-empty-placeholder">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>Your cart is currently empty.</p>
+                        <a href="products.html" class="btn">Continue Shopping</a>
+                    </div>
                 </div>
                 <div class="cart-summary">
                     <h2>Order Summary</h2>
                     <div class="summary-item">
                         <span>Subtotal:</span>
-                        <span id="cart-total">Rs 0.00</span>
+                        <span id="cart-subtotal">Rs 0.00</span>
                     </div>
                     <div class="summary-item">
                         <span>Shipping:</span>
-                        <span>Free</span>
+                        <span id="shipping-cost">Free</span>
+                    </div>
+                    <div class="summary-item discount-row">
+                        <span>Discount:</span>
+                        <span id="discount-amount">Rs 0.00</span>
                     </div>
                     <hr>
                     <div class="summary-total">
                         <span>Total:</span>
-                        <span id="final-total">Rs 0.00</span>
+                        <span id="cart-total">Rs 0.00</span>
+                    </div>
+                    <div class="promo-code">
+                        <h3>Promo Code</h3>
+                        <div class="promo-input">
+                            <input type="text" id="promo-code" placeholder="Enter promo code">
+                            <button id="apply-promo" class="btn-small">Apply</button>
+                        </div>
                     </div>
                     <a href="checkout.html" class="btn checkout-btn">Proceed to Checkout</a>
+                    <div class="continue-shopping">
+                        <a href="products.html"><i class="fas fa-arrow-left"></i> Continue Shopping</a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <footer>
-        <div class="footer-section">
-            <h3>Quick Links</h3>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="products.html">Shop</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>YashStore</h3>
+                    <p>Exquisite earrings for every style and occasion.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Shop</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Main Street, City, Country</p>
+                    <p><i class="fas fa-envelope"></i> info@yashstore.com</p>
+                    <p><i class="fas fa-phone"></i> +1 234 567 8900</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 YashStore. All rights reserved. Powered by CloudNextra Solution.</p>
+            </div>
         </div>
     </footer>
+    
+    <script src="js/main.js"></script>
 </body>
 </html>
