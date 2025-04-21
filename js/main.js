@@ -404,7 +404,6 @@ function initializeProductPage() {
                          onerror="this.src='https://via.placeholder.com/500x500?text=Earrings'; this.classList.add('loaded');">
                 </div>
                 <div class="product-info">
-                    <span class="product-category">${product.category.charAt(0).toUpperCase() + product.category.slice(1)}</span>
                     <h1>${product.name}</h1>
                     <p class="price">Rs ${product.price.toFixed(2)}</p>
                     <div class="product-description">
@@ -626,8 +625,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // More robust page detection for Netlify (handles both /products.html and /products paths)
     if (currentPage.includes('products') || currentPage.endsWith('/')) {
         console.log('Initializing products page');
+        // Always display all products since filters are disabled
         displayProducts();
         
+        /* Category filters temporarily disabled
         // Setup category filters if they exist
         const categoryFilters = document.querySelectorAll('.category-filter');
         if (categoryFilters.length > 0) {
@@ -648,6 +649,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             console.log('No category filters found');
         }
+        */
     }
     
     if (currentPage.includes('product-details.html')) {
