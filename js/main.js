@@ -462,23 +462,44 @@ function initializeProductPage() {
 function displayProducts(filteredProducts = null) {
     const productsGrid = document.getElementById('products-grid');
     
-    if (!productsGrid) return;
+    if (!productsGrid) {
+        console.error('Products grid element not found');
+        return;
+    }
     
     const productsToDisplay = filteredProducts || products;
+    
+    // Debug info for Netlify deployment
+    console.log(`Displaying ${productsToDisplay.length} products`);
+    
+    if (productsToDisplay.length === 0) {
+        productsGrid.innerHTML = `
+            <div class="no-products">
+                <p>No products found. Please try a different category or check back later.</p>
+            </div>
+        `;
+        return;
+    }
     
     productsGrid.innerHTML = '';
     
     productsToDisplay.forEach(product => {
+        // Verify each product has required properties
+        if (!product || !product.id || !product.name || !product.price) {
+            console.error('Invalid product data:', product);
+            return;
+        }
+        
         const productCard = document.createElement('div');
         productCard.className = 'product-card';
         
-        // Directly use explicit size images from Pinterest
-        const imageSrc = product.image;
+        // Ensure image path works on both local and Netlify
+        const imageSrc = product.image || '';
         
         productCard.innerHTML = `
             <div class="product-image loading">
                 <img src="${imageSrc}" alt="${product.name}" 
-                     onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'">
+                     onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
                 <div class="product-overlay">
                     <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
                     <button class="view-details" data-id="${product.id}">View Details</button>
@@ -496,20 +517,24 @@ function displayProducts(filteredProducts = null) {
         productsGrid.appendChild(productCard);
     });
     
-    // Add event listeners for the new buttons
-    document.querySelectorAll('.add-to-cart').forEach(button => {
-        button.addEventListener('click', function() {
-            const productId = parseInt(this.getAttribute('data-id'));
-            addToCart(productId);
+    // Add event listeners for the buttons - make sure they're properly attached
+    try {
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = parseInt(this.getAttribute('data-id'));
+                addToCart(productId);
+            });
         });
-    });
-    
-    document.querySelectorAll('.view-details').forEach(button => {
-        button.addEventListener('click', function() {
-            const productId = parseInt(this.getAttribute('data-id'));
-            window.location.href = `product-details.html?id=${productId}`;
+        
+        document.querySelectorAll('.view-details').forEach(button => {
+            button.addEventListener('click', function() {
+                const productId = parseInt(this.getAttribute('data-id'));
+                window.location.href = `product-details.html?id=${productId}`;
+            });
         });
-    });
+    } catch (error) {
+        console.error('Error attaching product button events:', error);
+    }
 }
 
 // Filter products by category
@@ -596,23 +621,33 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Setup page-specific initializations
     const currentPage = window.location.pathname;
+    console.log('Current page:', currentPage);
     
-    if (currentPage.includes('products.html')) {
+    // More robust page detection for Netlify (handles both /products.html and /products paths)
+    if (currentPage.includes('products') || currentPage.endsWith('/')) {
+        console.log('Initializing products page');
         displayProducts();
         
         // Setup category filters if they exist
         const categoryFilters = document.querySelectorAll('.category-filter');
-        categoryFilters.forEach(filter => {
-            filter.addEventListener('click', function() {
-                const category = this.getAttribute('data-category');
-                
-                // Update active class
-                categoryFilters.forEach(f => f.classList.remove('active'));
-                this.classList.add('active');
-                
-                filterProducts(category);
+        if (categoryFilters.length > 0) {
+            console.log('Found category filters:', categoryFilters.length);
+            
+            categoryFilters.forEach(filter => {
+                filter.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    console.log('Filtering by category:', category);
+                    
+                    // Update active class
+                    categoryFilters.forEach(f => f.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    filterProducts(category);
+                });
             });
-        });
+        } else {
+            console.log('No category filters found');
+        }
     }
     
     if (currentPage.includes('product-details.html')) {

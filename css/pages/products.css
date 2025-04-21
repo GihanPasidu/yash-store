@@ -42,3 +42,26 @@
 .products-grid {
     margin-bottom: 60px;
 }
+
+.loading-products {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 0;
+    color: var(--secondary-color);
+    width: 100%;
+}
+
+.loading-products i {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    color: var(--accent-color);
+}
+
+.no-products {
+    text-align: center;
+    padding: 50px 0;
+    color: var(--secondary-color);
+    width: 100%;
+}
