@@ -13,31 +13,34 @@
     <header>
         <div class="container">
             <div class="logo">
-                <h1>YashStore</h1>
+                <a href="index.html"><h1>YashStore</h1></a>
             </div>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="products.html">Shop</a></li>
-                </ul>
-            </nav>
             <div class="cart-icon">
                 <a href="cart.html"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></a>
             </div>
         </div>
     </header>
 
-    <section class="page-header">
-        <div class="container">
-            <h1>Product Details</h1>
-        </div>
-    </section>
+    <div class="page-content">
+        <section class="page-header">
+            <div class="container">
+                <div class="back-navigation">
+                    <a href="products.html" class="back-button"><i class="fas fa-arrow-left"></i> Back to Products</a>
+                </div>
+                <h1>Product Details</h1>
+            </div>
+        </section>
 
-    <section class="product-details">
-        <div class="container" id="product-details">
-            <!-- Product details will be dynamically loaded here by JavaScript -->
-        </div>
-    </section>
+        <section class="product-details-container">
+            <div class="container" id="product-details">
+                <!-- Product details will be dynamically loaded here by JavaScript -->
+                <div class="product-loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading product details...</p>
+                </div>
+            </div>
+        </section>
+    </div>
 
     <footer>
         <div class="container">

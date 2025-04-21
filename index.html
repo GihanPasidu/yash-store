@@ -48,114 +48,110 @@
     <header>
         <div class="container">
             <div class="logo">
-                <h1>YashStore</h1>
+                <a href="index.html"><h1>YashStore</h1></a>
             </div>
-            <nav>
-                <ul>
-                    <li><a href="index.html" class="active">Home</a></li>
-                    <li><a href="products.html">Shop</a></li>
-                </ul>
-            </nav>
             <div class="cart-icon">
                 <a href="cart.html"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></a>
             </div>
         </div>
     </header>
 
-    <!-- Add mobile menu toggle button -->
-    <button class="mobile-menu-toggle" aria-label="Toggle Menu">
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
+    <div class="page-content">
+        <!-- Add mobile menu toggle button -->
+        <button class="mobile-menu-toggle" aria-label="Toggle Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
 
-    <style>
-        .hero {
-            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-                url('https://images.unsplash.com/photo-1615655406736-b37c4fabf923?w=1920&auto=format');
-        }
-    </style>
+        <style>
+            .hero {
+                background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                    url('https://images.unsplash.com/photo-1615655406736-b37c4fabf923?w=1920&auto=format');
+            }
+        </style>
 
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h2>Elegant Earrings for Every Occasion</h2>
-                <p>Discover our handcrafted collection that adds sparkle to your style</p>
-                <a href="products.html" class="btn">Shop Now</a>
-            </div>
-        </div>
-    </section>
-
-    <section class="featured">
-        <div class="container">
-            <h2 class="section-title">Featured Collection</h2>
-            <div class="products-grid">
-                <div class="product-card">
-                    <div class="product-image loading">
-                        <img src="https://i.pinimg.com/736x/93/ee/51/93ee51bb62b51df9e6b435201e5447c9.jpg" 
-                             alt="Black Earrings" 
-                             onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
-                        <div class="product-overlay">
-                            <button class="add-to-cart" data-id="1">Add to Cart</button>
-                            <button class="view-details" data-id="1">View Details</button>
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <h3>Black Earrings</h3>
-                        <p class="price">Rs 30.00</p>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image loading">
-                        <img src="https://i.pinimg.com/474x/cb/f8/f1/cbf8f16368fd24af8e6ed9ff776c0c41.jpg" 
-                             alt="Flower Earrings"
-                             onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
-                        <div class="product-overlay">
-                            <button class="add-to-cart" data-id="2">Add to Cart</button>
-                            <button class="view-details" data-id="2">View Details</button>
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <h3>Flower Earrings</h3>
-                        <p class="price">Rs 40.00</p>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image loading">
-                        <img src="https://i.pinimg.com/736x/e0/df/e5/e0dfe5d7bb26e3fd46da8d6307b35907.jpg" 
-                             alt="Flower Earrings" 
-                             onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
-                        <div class="product-overlay">
-                            <button class="add-to-cart" data-id="9">Add to Cart</button>
-                            <button class="view-details" data-id="9">View Details</button>
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <h3>Flower Earrings</h3>
-                        <p class="price">Rs 40.00</p>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image loading">
-                        <img src="https://i.pinimg.com/736x/28/ee/90/28ee90ccb1a8b65d6f6af135e55f115e.jpg" 
-                             alt="Flower Earrings" 
-                             onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
-                        <div class="product-overlay">
-                            <button class="add-to-cart" data-id="7">Add to Cart</button>
-                            <button class="view-details" data-id="7">View Details</button>
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <h3>Flower Earrings</h3>
-                        <p class="price">Rs 40.00</p>
-                    </div>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2>Elegant Earrings for Every Occasion</h2>
+                    <p>Discover our handcrafted collection that adds sparkle to your style</p>
+                    <a href="products.html" class="btn">Shop Now</a>
                 </div>
             </div>
-            <div class="center" style="margin-top: 40px;">
-                <a href="products.html" class="btn">View All Products</a>
+        </section>
+
+        <section class="featured">
+            <div class="container">
+                <h2 class="section-title">Featured Collection</h2>
+                <div class="products-grid">
+                    <div class="product-card">
+                        <div class="product-image loading">
+                            <img src="https://i.pinimg.com/736x/93/ee/51/93ee51bb62b51df9e6b435201e5447c9.jpg" 
+                                 alt="Black Earrings" 
+                                 onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
+                            <div class="product-overlay">
+                                <button class="add-to-cart" data-id="1">Add to Cart</button>
+                                <button class="view-details" data-id="1">View Details</button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3>Black Earrings</h3>
+                            <p class="price">Rs 30.00</p>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image loading">
+                            <img src="https://i.pinimg.com/474x/cb/f8/f1/cbf8f16368fd24af8e6ed9ff776c0c41.jpg" 
+                                 alt="Flower Earrings"
+                                 onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
+                            <div class="product-overlay">
+                                <button class="add-to-cart" data-id="2">Add to Cart</button>
+                                <button class="view-details" data-id="2">View Details</button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3>Flower Earrings</h3>
+                            <p class="price">Rs 40.00</p>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image loading">
+                            <img src="https://i.pinimg.com/736x/e0/df/e5/e0dfe5d7bb26e3fd46da8d6307b35907.jpg" 
+                                 alt="Flower Earrings" 
+                                 onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
+                            <div class="product-overlay">
+                                <button class="add-to-cart" data-id="9">Add to Cart</button>
+                                <button class="view-details" data-id="9">View Details</button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3>Flower Earrings</h3>
+                            <p class="price">Rs 40.00</p>
+                        </div>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-image loading">
+                            <img src="https://i.pinimg.com/736x/28/ee/90/28ee90ccb1a8b65d6f6af135e55f115e.jpg" 
+                                 alt="Flower Earrings" 
+                                 onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
+                            <div class="product-overlay">
+                                <button class="add-to-cart" data-id="7">Add to Cart</button>
+                                <button class="view-details" data-id="7">View Details</button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3>Flower Earrings</h3>
+                            <p class="price">Rs 40.00</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="center" style="margin-top: 40px;">
+                    <a href="products.html" class="btn">View All Products</a>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
     <footer>
         <div class="container">

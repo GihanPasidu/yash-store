@@ -395,31 +395,67 @@ function initializeProductPage() {
     
     if (!productDetails) return;
     
-    productDetails.innerHTML = `
-        <div class="product-image">
-            <img src="${product.image}" alt="${product.name}" 
-                 onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
-        </div>
-        <div class="product-info">
-            <h1>${product.name}</h1>
-            <p class="price">Rs ${product.price.toFixed(2)}</p>
-            <div class="product-description">
-                <p>${product.description}</p>
+    // Add a slight delay to simulate loading (optional)
+    setTimeout(() => {
+        productDetails.innerHTML = `
+            <div class="product-details">
+                <div class="product-image">
+                    <img src="${product.image}" alt="${product.name}" 
+                         onerror="this.src='https://via.placeholder.com/500x500?text=Earrings'; this.classList.add('loaded');">
+                </div>
+                <div class="product-info">
+                    <span class="product-category">${product.category.charAt(0).toUpperCase() + product.category.slice(1)}</span>
+                    <h1>${product.name}</h1>
+                    <p class="price">Rs ${product.price.toFixed(2)}</p>
+                    <div class="product-description">
+                        <p>${product.description}</p>
+                        <p>These beautiful earrings are perfect for any occasion, from casual outings to formal events. Each piece is carefully crafted to ensure the highest quality.</p>
+                    </div>
+                    <div class="product-features">
+                        <h3>Features</h3>
+                        <ul class="features-list">
+                            <li>High-quality materials</li>
+                            <li>Handcrafted design</li>
+                            <li>Comfortable to wear</li>
+                            <li>Elegant packaging</li>
+                        </ul>
+                    </div>
+                    <div class="product-actions">
+                        <button id="add-to-cart-btn" class="btn" data-id="${product.id}">Add to Cart</button>
+                        <button class="wishlist-btn" title="Add to Wishlist"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
             </div>
-            <div class="product-actions">
-                <button id="add-to-cart-btn" class="btn" data-id="${product.id}">Add to Cart</button>
-            </div>
-        </div>
-    `;
-    
-    const img = productDetails.querySelector('img');
-    handleImageLoad(img);
-    
-    // Add event listener for add to cart button
-    document.getElementById('add-to-cart-btn').addEventListener('click', function() {
-        const productId = parseInt(this.getAttribute('data-id'));
-        addToCart(productId);
-    });
+        `;
+        
+        const img = productDetails.querySelector('img');
+        handleImageLoad(img);
+        
+        // Add event listener for add to cart button
+        document.getElementById('add-to-cart-btn').addEventListener('click', function() {
+            const productId = parseInt(this.getAttribute('data-id'));
+            addToCart(productId);
+        });
+        
+        // Add wishlist functionality (currently just visual)
+        const wishlistBtn = document.querySelector('.wishlist-btn');
+        if (wishlistBtn) {
+            wishlistBtn.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                if (icon.classList.contains('far')) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    icon.style.color = '#e74c3c';
+                    showNotification('Added to wishlist!', 'success');
+                } else {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    icon.style.color = '';
+                    showNotification('Removed from wishlist', 'info');
+                }
+            });
+        }
+    }, 500);
 }
 
 // Display products on products page

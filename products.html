@@ -13,47 +13,43 @@
     <header>
         <div class="container">
             <div class="logo">
-                <h1>YashStore</h1>
+                <a href="index.html"><h1>YashStore</h1></a>
             </div>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="products.html" class="active">Shop</a></li>
-                </ul>
-            </nav>
             <div class="cart-icon">
                 <a href="cart.html"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></a>
             </div>
         </div>
     </header>
 
-    <section class="page-header">
-        <div class="container">
-            <h1>Our Earring Collection</h1>
-            <p>Find the perfect pair for any occasion</p>
-        </div>
-    </section>
+    <div class="page-content">
+        <section class="page-header">
+            <div class="container">
+                <h1>Our Earring Collection</h1>
+                <p>Find the perfect pair for any occasion</p>
+            </div>
+        </section>
 
-    <section class="products">
-        <div class="container">
-            <div class="filters">
-                <h3>Categories</h3>
-                <div class="category-filters">
-                    <button class="category-filter active" data-category="all">All</button>
-                    <button class="category-filter" data-category="gold">Gold</button>
-                    <button class="category-filter" data-category="silver">Silver</button>
-                    <button class="category-filter" data-category="pearl">Pearl</button>
-                    <button class="category-filter" data-category="crystal">Crystal</button>
-                    <button class="category-filter" data-category="gemstone">Gemstone</button>
-                    <button class="category-filter" data-category="beaded">Beaded</button>
+        <section class="products">
+            <div class="container">
+                <div class="filters">
+                    <h3>Categories</h3>
+                    <div class="category-filters">
+                        <button class="category-filter active" data-category="all">All</button>
+                        <button class="category-filter" data-category="gold">Gold</button>
+                        <button class="category-filter" data-category="silver">Silver</button>
+                        <button class="category-filter" data-category="pearl">Pearl</button>
+                        <button class="category-filter" data-category="crystal">Crystal</button>
+                        <button class="category-filter" data-category="gemstone">Gemstone</button>
+                        <button class="category-filter" data-category="beaded">Beaded</button>
+                    </div>
+                </div>
+
+                <div id="products-grid" class="products-grid">
+                    <!-- Products will be dynamically loaded here by JavaScript -->
                 </div>
             </div>
-
-            <div id="products-grid" class="products-grid">
-                <!-- Products will be dynamically loaded here by JavaScript -->
-            </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
     <footer>
         <div class="container">

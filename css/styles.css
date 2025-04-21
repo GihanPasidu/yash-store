@@ -18,7 +18,13 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+}
+
 body {
+    display: flex;
+    flex-direction: column;
     font-family: 'Roboto', sans-serif;
     line-height: 1.6;
     color: var(--dark-color);
@@ -30,6 +36,11 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 15px;
+}
+
+/* Main content wrapper to push footer down */
+.page-content {
+    flex: 1 0 auto;
 }
 
 /* Typography */
@@ -134,37 +145,16 @@ header .container {
     color: var(--accent-color);
     font-size: 1.8rem;
     margin: 0;
+    transition: transform 0.3s ease;
 }
 
-nav ul {
-    display: flex;
-    list-style: none;
+.logo a {
+    text-decoration: none;
+    color: inherit;
 }
 
-nav ul li {
-    margin-left: 20px;
-}
-
-nav ul li a {
-    color: var(--dark-color);
-    font-weight: 500;
-    padding: 5px 10px;
-    position: relative;
-}
-
-nav ul li a:hover,
-nav ul li a.active {
-    color: var(--accent-color);
-}
-
-nav ul li a.active:after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 10px;
-    width: calc(100% - 20px);
-    height: 2px;
-    background-color: var(--accent-color);
+.logo a:hover h1 {
+    transform: scale(1.05);
 }
 
 .cart-icon a {
@@ -401,10 +391,12 @@ img.loaded {
 
 /* Footer */
 footer {
+    flex-shrink: 0;
     background-color: var(--dark-color);
     color: white;
     padding: 30px 0;
     text-align: center;
+    margin-top: auto;
 }
 
 .footer-content {

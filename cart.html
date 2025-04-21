@@ -13,72 +13,68 @@
     <header>
         <div class="container">
             <div class="logo">
-                <h1>YashStore</h1>
+                <a href="index.html"><h1>YashStore</h1></a>
             </div>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="products.html">Shop</a></li>
-                </ul>
-            </nav>
             <div class="cart-icon">
                 <a href="cart.html"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></a>
             </div>
         </div>
     </header>
 
-    <section class="page-header">
-        <div class="container">
-            <h1>Shopping Cart</h1>
-            <p>Review your items and checkout</p>
-        </div>
-    </section>
+    <div class="page-content">
+        <section class="page-header">
+            <div class="container">
+                <h1>Shopping Cart</h1>
+                <p>Review your items and checkout</p>
+            </div>
+        </section>
 
-    <section class="cart-container">
-        <div class="container">
-            <div class="cart-grid">
-                <div id="cart-items" class="cart-items-container">
-                    <!-- Cart items will be dynamically loaded here -->
-                    <div class="cart-empty-placeholder">
-                        <i class="fas fa-shopping-cart"></i>
-                        <p>Your cart is currently empty.</p>
-                        <a href="products.html" class="btn">Continue Shopping</a>
-                    </div>
-                </div>
-                <div class="cart-summary">
-                    <h2>Order Summary</h2>
-                    <div class="summary-item">
-                        <span>Subtotal:</span>
-                        <span id="cart-subtotal">Rs 0.00</span>
-                    </div>
-                    <div class="summary-item">
-                        <span>Shipping:</span>
-                        <span id="shipping-cost">Free</span>
-                    </div>
-                    <div class="summary-item discount-row">
-                        <span>Discount:</span>
-                        <span id="discount-amount">Rs 0.00</span>
-                    </div>
-                    <hr>
-                    <div class="summary-total">
-                        <span>Total:</span>
-                        <span id="cart-total">Rs 0.00</span>
-                    </div>
-                    <div class="promo-code">
-                        <h3>Promo Code</h3>
-                        <div class="promo-input">
-                            <input type="text" id="promo-code" placeholder="Enter promo code">
-                            <button id="apply-promo" class="btn-small">Apply</button>
+        <section class="cart-container">
+            <div class="container">
+                <div class="cart-grid">
+                    <div id="cart-items" class="cart-items-container">
+                        <!-- Cart items will be dynamically loaded here -->
+                        <div class="cart-empty-placeholder">
+                            <i class="fas fa-shopping-cart"></i>
+                            <p>Your cart is currently empty.</p>
+                            <a href="products.html" class="btn">Continue Shopping</a>
                         </div>
                     </div>
-                    <a href="checkout.html" class="btn checkout-btn">Proceed to Checkout</a>
-                    <div class="continue-shopping">
-                        <a href="products.html"><i class="fas fa-arrow-left"></i> Continue Shopping</a>
+                    <div class="cart-summary">
+                        <h2>Order Summary</h2>
+                        <div class="summary-item">
+                            <span>Subtotal:</span>
+                            <span id="cart-subtotal">Rs 0.00</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Shipping:</span>
+                            <span id="shipping-cost">Free</span>
+                        </div>
+                        <div class="summary-item discount-row">
+                            <span>Discount:</span>
+                            <span id="discount-amount">Rs 0.00</span>
+                        </div>
+                        <hr>
+                        <div class="summary-total">
+                            <span>Total:</span>
+                            <span id="cart-total">Rs 0.00</span>
+                        </div>
+                        <div class="promo-code">
+                            <h3>Promo Code</h3>
+                            <div class="promo-input">
+                                <input type="text" id="promo-code" placeholder="Enter promo code">
+                                <button id="apply-promo" class="btn-small">Apply</button>
+                            </div>
+                        </div>
+                        <a href="checkout.html" class="btn checkout-btn">Proceed to Checkout</a>
+                        <div class="continue-shopping">
+                            <a href="products.html"><i class="fas fa-arrow-left"></i> Continue Shopping</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
     <footer>
         <div class="container">
