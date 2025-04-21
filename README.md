@@ -101,11 +101,11 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 
 ## 📜 License
 
-Copyright © 2023 YashStore. All rights reserved. Powered by CloudNextra Solution.
+Copyright © 2025 YashStore. All rights reserved. Powered by [CloudNextra Solution](https://github.com/GihanPasidu).
 
 ---
 
 <p align="center">
-  Made with ❤️ by <a href="https://cloudnextra.com">CloudNextra Solution</a>
+  Made with ❤️ by <a href="https://github.com/GihanPasidu">CloudNextra Solution</a>
 </p>
 
