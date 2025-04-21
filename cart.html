@@ -88,5 +88,17 @@
     </footer>
     
     <script src="js/main.js"></script>
+    <script>
+        // Check if we're on a mobile device and adjust layout if needed
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth < 768) {
+                // Add mobile-specific behaviors here if needed
+                const cartItems = document.getElementById('cart-items');
+                if (cartItems) {
+                    cartItems.classList.add('mobile-cart');
+                }
+            }
+        });
+    </script>
 </body>
 </html>

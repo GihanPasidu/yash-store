@@ -613,6 +613,49 @@ function initializeCheckout() {
     });
 }
 
+// Display checkout summary
+function displayCheckoutSummary() {
+    const checkoutItems = document.getElementById('checkout-items');
+    const checkoutSubtotal = document.getElementById('checkout-subtotal');
+    const checkoutTotal = document.getElementById('checkout-total');
+    
+    if (!checkoutItems || !checkoutTotal) return;
+    
+    if (cart.length === 0) {
+        window.location.href = 'cart.html';
+        return;
+    }
+    
+    checkoutItems.innerHTML = '';
+    let total = 0;
+    
+    cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        
+        const checkoutItem = document.createElement('div');
+        checkoutItem.className = 'checkout-item';
+        checkoutItem.innerHTML = `
+            <div class="checkout-item-image">
+                <img src="${item.image}" alt="${item.name}" 
+                     onerror="this.src='https://via.placeholder.com/60x60?text=Earrings'">
+            </div>
+            <div class="checkout-item-info">
+                <h3>${item.name}</h3>
+                <p class="qty">Qty: ${item.quantity}</p>
+            </div>
+            <div class="checkout-item-price">
+                Rs ${itemTotal.toFixed(2)}
+            </div>
+        `;
+        
+        checkoutItems.appendChild(checkoutItem);
+    });
+    
+    if (checkoutSubtotal) checkoutSubtotal.textContent = `Rs ${total.toFixed(2)}`;
+    checkoutTotal.textContent = `Rs ${total.toFixed(2)}`;
+}
+
 // Document ready functions
 document.addEventListener('DOMContentLoaded', function() {
     // Update cart count on page load
@@ -621,6 +664,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup page-specific initializations
     const currentPage = window.location.pathname;
     console.log('Current page:', currentPage);
+    
+    // Check if we're on a mobile device
+    const isMobile = window.innerWidth < 768;
     
     // More robust page detection for Netlify (handles both /products.html and /products paths)
     if (currentPage.includes('products') || currentPage.endsWith('/')) {
@@ -658,10 +704,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (currentPage.includes('cart.html')) {
         displayCart();
+        
+        // For mobile, enhance touch area
+        if (isMobile) {
+            const cartItems = document.getElementById('cart-items');
+            if (cartItems) {
+                cartItems.classList.add('mobile-cart');
+            }
+        }
     }
     
     if (currentPage.includes('checkout.html')) {
         initializeCheckout();
+        
+        // Display cart items in checkout summary
+        displayCheckoutSummary();
     }
     
     // Add event listeners for existing add to cart buttons
@@ -686,4 +743,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         handleImageLoad(img);
     });
+    
+    // Mobile-specific enhancements
+    if (isMobile) {
+        // Make buttons more touchable
+        document.querySelectorAll('button, .btn').forEach(btn => {
+            if (!btn.classList.contains('quantity-btn')) {
+                btn.style.minHeight = '44px';
+            }
+        });
+        
+        // Increase font sizes for better readability on small screens
+        document.querySelectorAll('input, select').forEach(input => {
+            input.style.fontSize = '16px'; // Prevents iOS zoom on focus
+        });
+    }
 });
