@@ -5,66 +5,106 @@
 const products = [
     {
         id: 1,
-        name: "Gold Hoop Earrings",
-        price: 49.99,
-        image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500",
-        description: "Elegant gold-plated hoops, perfect for everyday wear or special occasions.",
+        name: "Black Earrings",
+        price: 30.00,
+        image: "https://i.pinimg.com/736x/93/ee/51/93ee51bb62b51df9e6b435201e5447c9.jpg",
+        description: "Simple, modern Earrings with a minimalist design.",
         category: "gold"
     },
     {
         id: 2,
-        name: "Crystal Drop Earrings",
-        price: 59.99,
-        image: "https://images.unsplash.com/photo-1587467512961-120760940315?w=500",
-        description: "Sparkling crystal drop earrings that catch the light beautifully.",
+        name: "Flower Earrings",
+        price: 40.00,
+        image: "https://i.pinimg.com/474x/cb/f8/f1/cbf8f16368fd24af8e6ed9ff776c0c41.jpg",
+        description: "Simple, modern Earrings with a minimalist design.",
         category: "crystal"
     },
     {
         id: 3,
-        name: "Pearl Stud Earrings",
-        price: 39.99,
-        image: "https://images.unsplash.com/photo-1598560917505-59a3ad559071?w=500",
-        description: "Classic freshwater pearl studs with sterling silver posts.",
+        name: "Flower Earrings",
+        price: 40.00,
+        image: "https://i.pinimg.com/736x/a1/ec/cc/a1eccccc73eaa842fd6e862e262e09f9.jpg",
+        description: "Simple, modern Earrings with a minimalist design.",
         category: "pearl"
     },
     {
         id: 4,
-        name: "Silver Statement Earrings",
-        price: 69.99,
-        image: "https://images.unsplash.com/photo-1630019852942-f89202989a59?w=500",
-        description: "Bold and artistic silver statement earrings.",
+        name: "Flower Earrings",
+        price: 40.00,
+        image: "https://i.pinimg.com/736x/59/47/8b/59478b6df3a955adfb9a35bea8f354f9.jpg",
+        description: "Simple, modern Earrings with a minimalist design.",
         category: "silver"
     },
     {
         id: 5,
-        name: "Botanical Dangle Earrings",
-        price: 45.99,
-        image: "https://images.unsplash.com/photo-1602283140000-f5f4a9ce8b10?w=500",
-        description: "Nature-inspired dangle earrings with delicate leaf designs.",
+        name: "Flower Earrings",
+        price: 40.00,
+        image: "https://i.pinimg.com/474x/e6/53/6b/e6536b44c96b887dd3c42ec87ab50e43.jpg",
+        description: "Simple, modern Earrings with a minimalist design.",
         category: "gold"
     },
     {
         id: 6,
-        name: "Minimalist Bar Studs",
-        price: 29.99,
-        image: "https://images.unsplash.com/photo-1625945670624-638970dc7351?w=500",
-        description: "Simple, modern bar studs in gold finish.",
+        name: "Flower Earrings",
+        price: 40.00,
+        image: "https://i.pinimg.com/736x/c0/b0/d3/c0b0d36c63eac04c5c253be22d567ee5.jpg",
+        description: "Simple, modern Earrings with a minimalist design.",
         category: "gold"
     },
     {
         id: 7,
-        name: "Turquoise Drop Earrings",
-        price: 54.99,
-        image: "https://images.unsplash.com/photo-1627293509201-cd0c2e4c4a48?w=500",
-        description: "Beautiful turquoise stone drops set in silver-toned metal.",
+        name: "Flower Earrings",
+        price: 40.00,
+        image: "https://i.pinimg.com/736x/28/ee/90/28ee90ccb1a8b65d6f6af135e55f115e.jpg",
+        description: "Simple, modern Earrings with a minimalist design.",
         category: "gemstone"
     },
     {
         id: 8,
-        name: "Beaded Tassel Earrings",
-        price: 49.99,
-        image: "https://images.unsplash.com/photo-1633934542430-0905ccb5f050?w=500",
-        description: "Colorful beaded tassel earrings that make a statement.",
+        name: "Flower Earrings",
+        price: 40.00,
+        image: "https://i.pinimg.com/474x/bb/87/ef/bb87efe6698cc157724939dc94254348.jpg",
+        description: "Simple, modern Earrings with a minimalist design.",
+        category: "beaded"
+    },
+    {
+        id: 9,
+        name: "Flower Earrings",
+        price: 40.00,
+        image: "https://i.pinimg.com/736x/e0/df/e5/e0dfe5d7bb26e3fd46da8d6307b35907.jpg",
+        description: "Simple, modern Earrings with a minimalist design.",
+        category: "beaded"
+    },
+    {
+        id: 10,
+        name: "Flower Earrings",
+        price: 40.00,
+        image: "https://i.pinimg.com/474x/94/a6/99/94a699903cf4e8430bccbebc6f6289a2.jpg",
+        description: "Simple, modern Earrings with a minimalist design.",
+        category: "beaded"
+    },
+    {
+        id: 11,
+        name: "Flower Earrings",
+        price: 40.00,
+        image: "https://i.pinimg.com/736x/de/15/bc/de15bca12a10755b2e58f4ef307567b8.jpg",
+        description: "Simple, modern Earrings with a minimalist design.",
+        category: "beaded"
+    },
+    {
+        id: 12,
+        name: "Flower Earrings",
+        price: 40.00,
+        image: "https://i.pinimg.com/474x/3d/16/4a/3d164a634d531caff1b0cb0e93ad780c.jpg",
+        description: "Simple, modern Earrings with a minimalist design.",
+        category: "beaded"
+    },
+    {
+        id: 13,
+        name: "Flower Earrings",
+        price: 40.00,
+        image: "https://i.pinimg.com/736x/b2/dd/22/b2dd220f9cceaf90421dd57aa80a6a32.jpg",
+        description: "Simple, modern Earrings with a minimalist design.",
         category: "beaded"
     }
 ];
@@ -168,7 +208,7 @@ function displayCart() {
     
     if (cart.length === 0) {
         cartContainer.innerHTML = '<p class="empty-cart">Your cart is empty. <a href="products.html">Continue shopping</a>.</p>';
-        cartTotal.textContent = '$0.00';
+        cartTotal.textContent = 'Rs 0.00';
         return;
     }
     
@@ -183,17 +223,18 @@ function displayCart() {
         cartItem.className = 'cart-item';
         cartItem.innerHTML = `
             <div class="cart-item-image">
-                <img src="${item.image}" alt="${item.name}">
+                <img src="${item.image}" alt="${item.name}" 
+                     onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
             </div>
             <div class="cart-item-details">
                 <h3>${item.name}</h3>
-                <p class="price">$${item.price.toFixed(2)}</p>
+                <p class="price">Rs ${item.price.toFixed(2)}</p>
                 <div class="quantity-control">
                     <button class="quantity-btn minus" data-id="${item.id}">-</button>
                     <input type="number" value="${item.quantity}" min="1" class="quantity-input" data-id="${item.id}">
                     <button class="quantity-btn plus" data-id="${item.id}">+</button>
                 </div>
-                <p class="item-total">Total: $${itemTotal.toFixed(2)}</p>
+                <p class="item-total">Total: Rs ${itemTotal.toFixed(2)}</p>
                 <button class="remove-item" data-id="${item.id}">Remove</button>
             </div>
         `;
@@ -201,7 +242,7 @@ function displayCart() {
         cartContainer.appendChild(cartItem);
     });
     
-    cartTotal.textContent = `$${total.toFixed(2)}`;
+    cartTotal.textContent = `Rs ${total.toFixed(2)}`;
     
     // Add event listeners for quantity controls and remove buttons
     document.querySelectorAll('.minus').forEach(button => {
@@ -236,14 +277,29 @@ function displayCart() {
     });
 }
 
-// Add image loading handler
+// Improved image loading handler
 function handleImageLoad(img) {
-    img.onerror = () => {
-        img.src = 'https://via.placeholder.com/300x300?text=Product+Image';
-    };
+    // Make sure the image has the proper error handler
+    if (!img.hasAttribute('onerror')) {
+        img.setAttribute('onerror', "this.src='https://via.placeholder.com/300x300?text=Earrings'");
+    }
+    
+    // Add success handler
     img.onload = () => {
         img.classList.add('loaded');
+        // Remove loading state from parent container
+        if (img.parentElement && img.parentElement.classList.contains('loading')) {
+            img.parentElement.classList.remove('loading');
+        }
     };
+    
+    // If image is already complete, mark it as loaded
+    if (img.complete) {
+        img.classList.add('loaded');
+        if (img.parentElement && img.parentElement.classList.contains('loading')) {
+            img.parentElement.classList.remove('loading');
+        }
+    }
 }
 
 // Initialize product details page
@@ -269,11 +325,12 @@ function initializeProductPage() {
     
     productDetails.innerHTML = `
         <div class="product-image">
-            <img src="${product.image}" alt="${product.name}">
+            <img src="${product.image}" alt="${product.name}" 
+                 onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
         </div>
         <div class="product-info">
             <h1>${product.name}</h1>
-            <p class="price">$${product.price.toFixed(2)}</p>
+            <p class="price">Rs ${product.price.toFixed(2)}</p>
             <div class="product-description">
                 <p>${product.description}</p>
             </div>
@@ -305,10 +362,15 @@ function displayProducts(filteredProducts = null) {
     
     productsToDisplay.forEach(product => {
         const productCard = document.createElement('div');
-        productCard.className = 'product-card loading';
+        productCard.className = 'product-card';
+        
+        // Directly use explicit size images from Pinterest
+        const imageSrc = product.image;
+        
         productCard.innerHTML = `
-            <div class="product-image">
-                <img src="${product.image}?w=400&auto=format" alt="${product.name}" loading="lazy">
+            <div class="product-image loading">
+                <img src="${imageSrc}" alt="${product.name}" 
+                     onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'">
                 <div class="product-overlay">
                     <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
                     <button class="view-details" data-id="${product.id}">View Details</button>
@@ -316,7 +378,7 @@ function displayProducts(filteredProducts = null) {
             </div>
             <div class="product-info">
                 <h3>${product.name}</h3>
-                <p class="price">$${product.price.toFixed(2)}</p>
+                <p class="price">Rs ${product.price.toFixed(2)}</p>
             </div>
         `;
         
@@ -470,5 +532,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const productId = parseInt(this.getAttribute('data-id'));
             window.location.href = `product-details.html?id=${productId}`;
         });
+    });
+    
+    // Fix all existing images on the page
+    document.querySelectorAll('img').forEach(img => {
+        if (!img.hasAttribute('onerror')) {
+            img.setAttribute('onerror', "this.src='https://via.placeholder.com/300x300?text=Earrings'");
+        }
+        handleImageLoad(img);
     });
 });
