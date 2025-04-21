@@ -120,20 +120,43 @@ function updateCartCount() {
     }
 }
 
-// Add loading state handler
+// Improve loading state handler
 function setLoading(element, isLoading) {
+    if (!element) return;
+    
     if (isLoading) {
         element.classList.add('loading');
         element.setAttribute('disabled', true);
+        
+        // Store original text if it doesn't exist yet
+        if (!element.dataset.originalText) {
+            element.dataset.originalText = element.innerHTML;
+        }
+        
+        // Add loading indicator
+        if (element.classList.contains('add-to-cart')) {
+            element.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+        }
     } else {
         element.classList.remove('loading');
         element.removeAttribute('disabled');
+        
+        // Restore original text
+        if (element.dataset.originalText) {
+            element.innerHTML = element.dataset.originalText;
+        }
     }
 }
 
 // Enhance add to cart function
 async function addToCart(productId) {
     const button = document.querySelector(`button[data-id="${productId}"]`);
+    
+    // Prevent double-clicking by checking if button is already in loading state
+    if (button.classList.contains('loading') || button.hasAttribute('disabled')) {
+        return;
+    }
+    
     setLoading(button, true);
     
     try {
@@ -163,7 +186,11 @@ async function addToCart(productId) {
     } catch (error) {
         showNotification('Failed to add item to cart', 'error');
     } finally {
-        setLoading(button, false);
+        // Add a slight delay before enabling the button again
+        // to prevent accidental double-clicks
+        setTimeout(() => {
+            setLoading(button, false);
+        }, 300);
     }
 }
 

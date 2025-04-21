@@ -23,8 +23,6 @@ YashStore is an e-commerce website specialized in selling beautiful, high-qualit
 - Product Listings (products.html)
 - Product Details (product-details.html)
 - Shopping Cart (cart.html)
-- About Us (about.html)
-- Contact (contact.html)
 
 ## Installation
 
