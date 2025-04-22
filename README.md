@@ -53,9 +53,16 @@ YashStore is a premium e-commerce platform specializing in beautiful, high-quali
    - 📂 Open `index.html` in your browser to view the website
    - 🔧 No build steps or dependencies required
 
-3. **Deployment**:
-   - 🚀 Upload all files to any static web hosting service
-   - 🌐 The site is fully static and can be deployed on platforms like Netlify, Vercel, or GitHub Pages
+3. **Deployment on Netlify**:
+   - 🚀 Fork or clone this repository to your GitHub account
+   - 📝 Create a new site on [Netlify](https://app.netlify.com/)
+   - 🔄 Connect your GitHub repository to Netlify
+   - 🌐 Use the following build settings:
+     - Build command: Leave empty (it's a static site)
+     - Publish directory: `/` (root directory)
+   - 🔍 Advanced settings:
+     - Add environment variables if needed
+   - ✅ Deploy! Your site will be live in minutes
 
 ## 🔧 Project Structure
 
@@ -74,6 +81,8 @@ yash-store/
 ├── products.html                 # Product listings page
 ├── product-details.html          # Product details page
 ├── cart.html                     # Shopping cart page
+├── _redirects                    # Netlify redirects configuration
+├── netlify.toml                  # Netlify configuration file
 └── README.md                     # Project documentation
 ```
 
@@ -101,7 +110,7 @@ Contributions, issues, and feature requests are welcome! Feel free to check the 
 
 ## 📜 License
 
-Copyright © 2025 YashStore. All rights reserved. Powered by [CloudNextra Solution](https://github.com/GihanPasidu).
+Copyright © 2023 YashStore. All rights reserved. Powered by [CloudNextra Solution](https://github.com/GihanPasidu).
 
 ---
 
