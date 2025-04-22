@@ -106,32 +106,22 @@ const products = [
         image: "https://i.pinimg.com/736x/b2/dd/22/b2dd220f9cceaf90421dd57aa80a6a32.jpg",
         description: "Simple, modern Earrings with a minimalist design.",
         category: "beaded"
-    },
-    {
-        id: 14,
-        name: "Gold Hoop Earrings",
-        price: 65.00,
-        image: "https://i.pinimg.com/736x/d8/e9/6c/d8e96c9c4f7a4f7cfb0a4ce47999b0e1.jpg",
-        description: "Timeless gold hoop earrings with a modern twist, perfect for elevating any look.",
-        category: "gold"
-    },
-    {
-        id: 15,
-        name: "Crystal Drop Earrings",
-        price: 75.00,
-        image: "https://i.pinimg.com/736x/78/4f/15/784f15c8755d0ec45d8f7971a4d26467.jpg",
-        description: "Sparkling crystal drop earrings that catch the light from every angle.",
-        category: "crystal"
-    },
-    {
-        id: 16,
-        name: "Pearl Stud Earrings",
-        price: 55.00,
-        image: "https://i.pinimg.com/736x/19/13/33/1913338fbf3e7c14d9da5d12f4cfc32f.jpg",
-        description: "Classic pearl stud earrings that add elegance to any outfit, day or night.",
-        category: "pearl"
     }
 ];
 
 // Make the products array available globally
 window.products = products;
+
+// Extra code to ensure products are available on Netlify
+console.log('Products data loaded, count:', products.length);
+
+// Add a global flag to indicate products are loaded
+window.productsLoaded = true;
+
+// Create a global function to get products data (useful for Netlify)
+window.getProducts = function() {
+    return products;
+};
+
+// Dispatch an event when products are loaded
+document.dispatchEvent(new CustomEvent('productsLoaded', { detail: products }));

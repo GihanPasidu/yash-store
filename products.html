@@ -70,13 +70,123 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Initializing products page for Netlify');
             
-            // Force products to display correctly on Netlify
-            setTimeout(function() {
+            // Force products to display correctly on Netlify with multiple attempts
+            function attemptDisplayProducts() {
+                console.log('Attempting to display products...');
+                
                 if (typeof displayProducts === 'function') {
                     displayProducts();
-                    console.log('Forced products display for Netlify');
+                    console.log('Called displayProducts function');
+                    
+                    // Check if products were actually rendered
+                    setTimeout(() => {
+                        const productsGrid = document.getElementById('products-grid');
+                        if (productsGrid && (productsGrid.children.length <= 1 || 
+                            productsGrid.querySelector('.loading-products'))) {
+                            console.log('Products not rendered properly, retrying...');
+                            displayProducts(); // Try again
+                        }
+                    }, 500);
+                } else {
+                    console.warn('displayProducts function not available yet');
                 }
-            }, 300);
+            }
+            
+            // Try immediate display
+            attemptDisplayProducts();
+            
+            // Try again after a short delay
+            setTimeout(attemptDisplayProducts, 300);
+            
+            // Final attempt with a longer delay
+            setTimeout(attemptDisplayProducts, 1000);
+            
+            // Fallback method if products still don't load
+            setTimeout(() => {
+                const productsGrid = document.getElementById('products-grid');
+                if (productsGrid && (productsGrid.children.length <= 1 || 
+                    productsGrid.querySelector('.loading-products'))) {
+                    
+                    console.log('Using emergency fallback for product display');
+                    
+                    // Check if window.products exists
+                    if (window.products && Array.isArray(window.products) && window.products.length > 0) {
+                        productsGrid.innerHTML = ''; // Clear loading state
+                        
+                        // Manual rendering of products
+                        window.products.forEach(product => {
+                            const productCard = document.createElement('div');
+                            productCard.className = 'product-card';
+                            
+                            productCard.innerHTML = `
+                                <div class="product-image loading">
+                                    <img src="${product.image}" alt="${product.name}" 
+                                         onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
+                                    <div class="product-overlay">
+                                        <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+                                        <button class="view-details" data-id="${product.id}">View Details</button>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <h3>${product.name}</h3>
+                                    <p class="price">Rs ${product.price.toFixed(2)}</p>
+                                </div>
+                            `;
+                            
+                            productsGrid.appendChild(productCard);
+                        });
+                        
+                        // Add event listeners
+                        document.querySelectorAll('.add-to-cart').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const id = parseInt(this.getAttribute('data-id'));
+                                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                                const product = window.products.find(p => p.id === id);
+                                
+                                if (product) {
+                                    const existingItem = cart.find(item => item.id === id);
+                                    if (existingItem) {
+                                        existingItem.quantity += 1;
+                                    } else {
+                                        cart.push({
+                                            id: product.id,
+                                            name: product.name,
+                                            price: product.price,
+                                            image: product.image,
+                                            quantity: 1
+                                        });
+                                    }
+                                    
+                                    localStorage.setItem('cart', JSON.stringify(cart));
+                                    
+                                    // Update cart count
+                                    const cartCount = document.getElementById('cart-count');
+                                    if (cartCount) {
+                                        const count = cart.reduce((total, item) => total + item.quantity, 0);
+                                        cartCount.textContent = count.toString();
+                                    }
+                                    
+                                    alert(`${product.name} added to cart!`);
+                                }
+                            });
+                        });
+                        
+                        document.querySelectorAll('.view-details').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const id = parseInt(this.getAttribute('data-id'));
+                                window.location.href = `product-details.html?id=${id}`;
+                            });
+                        });
+                    } else {
+                        productsGrid.innerHTML = `
+                            <div class="no-products">
+                                <p>Unable to load products. Please refresh the page or try again later.</p>
+                                <button onclick="window.location.reload()" class="btn">Refresh Page</button>
+                            </div>
+                        `;
+                    }
+                }
+            }, 2000);
             
             // Add special handling for add to cart buttons on Netlify
             document.body.addEventListener('click', function(e) {

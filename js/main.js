@@ -430,6 +430,32 @@ function displayProducts(filteredProducts = null) {
         return;
     }
     
+    // Debug info for Netlify deployment
+    console.log(`Attempting to display products. Current window.products:`, window.products);
+    
+    // Handle case where window.products might not be loaded yet on Netlify
+    if (!window.products || !Array.isArray(window.products)) {
+        console.warn('Products data not available. Attempting to reload from source');
+        
+        // Try to get products directly from file
+        const script = document.createElement('script');
+        script.src = 'js/products-data.js';
+        script.onload = function() {
+            console.log('Products data reloaded, displaying products');
+            setTimeout(() => displayProducts(filteredProducts), 200);
+        };
+        document.head.appendChild(script);
+        
+        // Show loading message while waiting
+        productsGrid.innerHTML = `
+            <div class="loading-products">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading products...</p>
+            </div>
+        `;
+        return;
+    }
+    
     // Use window.products (the global object) when no filtered products
     const productsToDisplay = filteredProducts || window.products;
     
@@ -445,7 +471,12 @@ function displayProducts(filteredProducts = null) {
         return;
     }
     
+    // Clear existing content
     productsGrid.innerHTML = '';
+    
+    // Add products with a slight delay between each to prevent Netlify rendering issues
+    let delay = 0;
+    const delayIncrement = 50; // ms between each product render
     
     productsToDisplay.forEach(product => {
         // Verify each product has required properties
@@ -454,35 +485,57 @@ function displayProducts(filteredProducts = null) {
             return;
         }
         
-        const productCard = document.createElement('div');
-        productCard.className = 'product-card';
-        
-        // Ensure image path works on both local and Netlify
-        const imageSrc = product.image || '';
-        
-        productCard.innerHTML = `
-            <div class="product-image loading">
-                <img src="${imageSrc}" alt="${product.name}" 
-                     onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
-                <div class="product-overlay">
-                    <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
-                    <button class="view-details" data-id="${product.id}">View Details</button>
+        setTimeout(() => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+            
+            // Ensure image path works on both local and Netlify
+            const imageSrc = product.image || '';
+            
+            productCard.innerHTML = `
+                <div class="product-image loading">
+                    <img src="${imageSrc}" alt="${product.name}" 
+                         onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
+                    <div class="product-overlay">
+                        <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+                        <button class="view-details" data-id="${product.id}">View Details</button>
+                    </div>
                 </div>
-            </div>
-            <div class="product-info">
-                <h3>${product.name}</h3>
-                <p class="price">Rs ${product.price.toFixed(2)}</p>
-            </div>
-        `;
+                <div class="product-info">
+                    <h3>${product.name}</h3>
+                    <p class="price">Rs ${product.price.toFixed(2)}</p>
+                </div>
+            `;
+            
+            const img = productCard.querySelector('img');
+            handleImageLoad(img);
+            
+            productsGrid.appendChild(productCard);
+            
+            // Add event listeners to this specific product card
+            const addToCartBtn = productCard.querySelector('.add-to-cart');
+            if (addToCartBtn) {
+                addToCartBtn.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-id'));
+                    addToCart(productId);
+                });
+            }
+            
+            const viewDetailsBtn = productCard.querySelector('.view-details');
+            if (viewDetailsBtn) {
+                viewDetailsBtn.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-id'));
+                    window.location.href = `product-details.html?id=${productId}`;
+                });
+            }
+        }, delay);
         
-        const img = productCard.querySelector('img');
-        handleImageLoad(img);
-        
-        productsGrid.appendChild(productCard);
+        delay += delayIncrement;
     });
     
-    // Add event listeners for the buttons - make sure they're properly attached
-    try {
+    // After all products have been added, add a global event listener to catch any buttons
+    // that might not have individual listeners
+    setTimeout(() => {
         document.querySelectorAll('.add-to-cart').forEach(button => {
             button.addEventListener('click', function() {
                 const productId = parseInt(this.getAttribute('data-id'));
@@ -496,9 +549,7 @@ function displayProducts(filteredProducts = null) {
                 window.location.href = `product-details.html?id=${productId}`;
             });
         });
-    } catch (error) {
-        console.error('Error attaching product button events:', error);
-    }
+    }, delay + 100);
 }
 
 // Filter products by category
@@ -719,11 +770,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check if products have been loaded
     if (!window.products) {
         console.error('Products data not loaded. Make sure products-data.js is included before main.js');
+        
+        // Try to reload the products data
+        const script = document.createElement('script');
+        script.src = 'js/products-data.js';
+        script.onload = function() {
+            console.log('Products data loaded dynamically');
+            // Initialize after loading
+            updateCartCount();
+            initializePageFunctions();
+        };
+        document.head.appendChild(script);
+    } else {
+        // Products already loaded, proceed normally
+        updateCartCount();
+        initializePageFunctions();
     }
-    
-    // Update cart count on page load
-    updateCartCount();
-    
+});
+
+// Separate function to initialize page-specific functions
+function initializePageFunctions() {
     // Setup page-specific initializations
     const currentPage = window.location.pathname;
     console.log('Current page:', currentPage);
@@ -732,6 +798,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const isCartPage = currentPage.includes('cart.html') || 
                        currentPage.endsWith('/cart') || 
                        currentPage.includes('/cart/');
+    const isProductsPage = currentPage.includes('products.html') || 
+                           currentPage.endsWith('/products') || 
+                           currentPage.includes('/products/');
     
     // Check if we're on a mobile device
     const isMobile = window.innerWidth < 768;
@@ -739,7 +808,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (isCartPage) {
         console.log('Initializing cart page');
-        
         // Add a small delay to ensure DOM is fully loaded
         setTimeout(() => {
             displayCart();
@@ -765,9 +833,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 500);
     }
     
-    if (currentPage.includes('products') || currentPage.endsWith('/')) {
+    if (isProductsPage || currentPage.endsWith('/')) {
         console.log('Initializing products page');
+        // Try to display products multiple times to ensure they load
         displayProducts();
+        
+        // Additional attempts with delays
+        setTimeout(displayProducts, 300);
+        setTimeout(displayProducts, 1000);
     }
     
     if (currentPage.includes('product-details.html')) {
