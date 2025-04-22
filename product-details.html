@@ -51,5 +51,79 @@
     </footer>
     
     <script src="js/main.js"></script>
+    <script>
+        // Netlify-specific initialization for product details page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing product details page for Netlify');
+            
+            // Handle URL query parameters with Netlify routing
+            const getProductId = () => {
+                const params = new URLSearchParams(window.location.search);
+                const id = params.get('id');
+                
+                // If no ID in query, try to extract from path (for Netlify pretty URLs)
+                if (!id && window.location.pathname.includes('/product-details/')) {
+                    const pathParts = window.location.pathname.split('/');
+                    return parseInt(pathParts[pathParts.length - 1]);
+                }
+                
+                return parseInt(id);
+            };
+            
+            // Force product details to initialize correctly
+            setTimeout(function() {
+                const productId = getProductId();
+                if (productId) {
+                    console.log('Found product ID from URL:', productId);
+                    
+                    // Initialize product page with specific ID
+                    const product = window.products.find(p => p.id === productId);
+                    if (product) {
+                        const productDetails = document.getElementById('product-details');
+                        if (productDetails) {
+                            // Generate product details HTML
+                            productDetails.innerHTML = `
+                                <div class="product-details">
+                                    <div class="product-image">
+                                        <img src="${product.image}" alt="${product.name}" 
+                                             onerror="this.src='https://via.placeholder.com/500x500?text=Earrings'; this.classList.add('loaded');">
+                                    </div>
+                                    <div class="product-info">
+                                        <h1>${product.name}</h1>
+                                        <p class="price">Rs ${product.price.toFixed(2)}</p>
+                                        <div class="product-description">
+                                            <p>${product.description}</p>
+                                            <p>These beautiful earrings are perfect for any occasion, from casual outings to formal events. Each piece is carefully crafted to ensure the highest quality.</p>
+                                        </div>
+                                        <div class="product-features">
+                                            <h3>Features</h3>
+                                            <ul class="features-list">
+                                                <li>High-quality materials</li>
+                                                <li>Handcrafted design</li>
+                                                <li>Comfortable to wear</li>
+                                                <li>Elegant packaging</li>
+                                            </ul>
+                                        </div>
+                                        <div class="product-actions">
+                                            <button id="add-to-cart-btn" class="btn" data-id="${product.id}">Add to Cart</button>
+                                            <button class="wishlist-btn" title="Add to Wishlist"><i class="far fa-heart"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            // Set up event listeners
+                            document.getElementById('add-to-cart-btn').addEventListener('click', function() {
+                                const id = parseInt(this.getAttribute('data-id'));
+                                if (typeof addToCart === 'function') {
+                                    addToCart(id);
+                                }
+                            });
+                        }
+                    }
+                }
+            }, 300);
+        });
+    </script>
 </body>
 </html>

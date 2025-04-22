@@ -97,5 +97,74 @@
     </footer>
     
     <script src="js/main.js"></script>
+    <script>
+        // Netlify-specific checkout page initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing checkout page for Netlify');
+            
+            // Force checkout summary to display correctly on Netlify
+            setTimeout(function() {
+                if (typeof displayCheckoutSummary === 'function') {
+                    displayCheckoutSummary();
+                    console.log('Forced checkout summary display for Netlify');
+                }
+            }, 300);
+            
+            // Enable form submission with WhatsApp integration for Netlify
+            const checkoutForm = document.getElementById('checkout-form');
+            if (checkoutForm) {
+                checkoutForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Check if we have items in cart
+                    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                    if (cart.length === 0) {
+                        alert('Your cart is empty');
+                        window.location.href = 'products.html';
+                        return;
+                    }
+                    
+                    // Get form data
+                    const fullName = document.getElementById('fullname').value;
+                    const phone = document.getElementById('phone').value;
+                    
+                    // Calculate cart total
+                    let cartTotal = 0;
+                    const cartItems = [];
+                    
+                    cart.forEach(item => {
+                        const itemTotal = item.price * item.quantity;
+                        cartTotal += itemTotal;
+                        cartItems.push(`${item.name} x${item.quantity} - Rs ${itemTotal.toFixed(2)}`);
+                    });
+                    
+                    // Create WhatsApp message
+                    let message = `*New Order from YashStore*\n\n`;
+                    message += `*Customer Details:*\n`;
+                    message += `Name: ${fullName}\n`;
+                    message += `WhatsApp: ${phone}\n\n`;
+                    
+                    message += `*Order Summary:*\n`;
+                    cartItems.forEach(item => {
+                        message += `${item}\n`;
+                    });
+                    
+                    message += `\n*Total Amount: Rs ${cartTotal.toFixed(2)}*`;
+                    
+                    // Encode the message for URL
+                    const encodedMessage = encodeURIComponent(message);
+                    
+                    // WhatsApp API URL with your number
+                    const whatsappURL = `https://wa.me/94767219661?text=${encodedMessage}`;
+                    
+                    // Clear cart
+                    localStorage.removeItem('cart');
+                    
+                    // Redirect to WhatsApp
+                    window.location.href = whatsappURL;
+                });
+            }
+        });
+    </script>
 </body>
 </html>

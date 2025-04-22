@@ -66,5 +66,33 @@
     </footer>
     
     <script src="js/main.js"></script>
+    <script>
+        // Netlify-specific initialization for products page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing products page for Netlify');
+            
+            // Force products to display correctly on Netlify
+            setTimeout(function() {
+                if (typeof displayProducts === 'function') {
+                    displayProducts();
+                    console.log('Forced products display for Netlify');
+                }
+            }, 300);
+            
+            // Add special handling for add to cart buttons on Netlify
+            document.body.addEventListener('click', function(e) {
+                // Handle add to cart button clicks with event delegation
+                if (e.target.classList.contains('add-to-cart') || e.target.closest('.add-to-cart')) {
+                    const button = e.target.classList.contains('add-to-cart') ? e.target : e.target.closest('.add-to-cart');
+                    const id = parseInt(button.getAttribute('data-id'));
+                    console.log('Add to cart clicked via delegation for ID:', id);
+                    
+                    if (typeof addToCart === 'function') {
+                        addToCart(id);
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

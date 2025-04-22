@@ -60,13 +60,6 @@
     </header>
 
     <div class="page-content">
-        <!-- Add mobile menu toggle button -->
-        <button class="mobile-menu-toggle" aria-label="Toggle Menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-
         <style>
             .hero {
                 background-image: url('https://i.pinimg.com/736x/5f/98/13/5f98130c15243a3ffa58b1400ce9d4a9.jpg');
@@ -184,5 +177,21 @@
     </footer>
     
     <script src="js/main.js"></script>
+    <script>
+        // Netlify-specific initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing index page for Netlify');
+            
+            // Fix for Netlify SPA routing
+            document.querySelectorAll('a').forEach(link => {
+                if (link.href.includes(window.location.origin) && !link.href.includes('#') && !link.getAttribute('target')) {
+                    link.addEventListener('click', function(e) {
+                        // Clear any errors in the console on navigation
+                        console.clear();
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
