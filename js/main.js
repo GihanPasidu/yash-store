@@ -1,114 +1,6 @@
 // YashStore - Main JavaScript
 // Copyright © 2023 CloudNextra Solution
 
-// Products data
-const products = [
-    {
-        id: 1,
-        name: "Black Earrings",
-        price: 30.00,
-        image: "https://i.pinimg.com/736x/93/ee/51/93ee51bb62b51df9e6b435201e5447c9.jpg",
-        description: "Simple, modern Earrings with a minimalist design.",
-        category: "gold"
-    },
-    {
-        id: 2,
-        name: "Flower Earrings(White)",
-        price: 50.00,
-        image: "https://i.pinimg.com/474x/cb/f8/f1/cbf8f16368fd24af8e6ed9ff776c0c41.jpg",
-        description: "Simple, modern Earrings with a minimalist design.",
-        category: "crystal"
-    },
-    {
-        id: 3,
-        name: "Flower Earrings(Red)",
-        price: 50.00,
-        image: "https://i.pinimg.com/736x/a1/ec/cc/a1eccccc73eaa842fd6e862e262e09f9.jpg",
-        description: "Simple, modern Earrings with a minimalist design.",
-        category: "pearl"
-    },
-    {
-        id: 4,
-        name: "Flower Earrings(Yellow)",
-        price: 50.00,
-        image: "https://i.pinimg.com/736x/59/47/8b/59478b6df3a955adfb9a35bea8f354f9.jpg",
-        description: "Simple, modern Earrings with a minimalist design.",
-        category: "silver"
-    },
-    {
-        id: 5,
-        name: "Flower Earrings(Blue)",
-        price: 50.00,
-        image: "https://i.pinimg.com/474x/e6/53/6b/e6536b44c96b887dd3c42ec87ab50e43.jpg",
-        description: "Simple, modern Earrings with a minimalist design.",
-        category: "gold"
-    },
-    {
-        id: 6,
-        name: "Flower Earrings(Pink)",
-        price: 50.00,
-        image: "https://i.pinimg.com/736x/c0/b0/d3/c0b0d36c63eac04c5c253be22d567ee5.jpg",
-        description: "Simple, modern Earrings with a minimalist design.",
-        category: "gold"
-    },
-    {
-        id: 7,
-        name: "Flower Earrings(light pink)",
-        price: 50.00,
-        image: "https://i.pinimg.com/736x/28/ee/90/28ee90ccb1a8b65d6f6af135e55f115e.jpg",
-        description: "Simple, modern Earrings with a minimalist design.",
-        category: "gemstone"
-    },
-    {
-        id: 8,
-        name: "Flower Earrings|(Green)",
-        price: 50.00,
-        image: "https://i.pinimg.com/474x/bb/87/ef/bb87efe6698cc157724939dc94254348.jpg",
-        description: "Simple, modern Earrings with a minimalist design.",
-        category: "beaded"
-    },
-    {
-        id: 9,
-        name: "Flower Earrings(purple)",
-        price: 50.00,
-        image: "https://i.pinimg.com/736x/e0/df/e5/e0dfe5d7bb26e3fd46da8d6307b35907.jpg",
-        description: "Simple, modern Earrings with a minimalist design.",
-        category: "beaded"
-    },
-    {
-        id: 10,
-        name: "Flower Earrings(Brown)",
-        price: 50.00,
-        image: "https://i.pinimg.com/474x/94/a6/99/94a699903cf4e8430bccbebc6f6289a2.jpg",
-        description: "Simple, modern Earrings with a minimalist design.",
-        category: "beaded"
-    },
-    {
-        id: 11,
-        name: "Flower Earrings(light Rose)",
-        price: 50.00,
-        image: "https://i.pinimg.com/736x/de/15/bc/de15bca12a10755b2e58f4ef307567b8.jpg",
-        description: "Simple, modern Earrings with a minimalist design.",
-        category: "beaded"
-    },
-    {
-        id: 12,
-        name: "Flower Earrings(Rose)",
-        price: 50.00,
-        image: "https://i.pinimg.com/474x/3d/16/4a/3d164a634d531caff1b0cb0e93ad780c.jpg",
-        description: "Simple, modern Earrings with a minimalist design.",
-        category: "beaded"
-    },
-    {
-        id: 13,
-        name: "Flower Earrings(light blue)",
-        price: 50.00,
-        image: "https://i.pinimg.com/736x/b2/dd/22/b2dd220f9cceaf90421dd57aa80a6a32.jpg",
-        description: "Simple, modern Earrings with a minimalist design.",
-        category: "beaded"
-    }
-];
-
 // Cart functionality
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
@@ -120,10 +12,19 @@ function updateCartCount() {
     }
 }
 
-// Add a utility function for consistent name formatting
+// Update utility function for consistent name formatting that works on Netlify
 function formatProductName(name) {
-    // Ensure proper spacing around parentheses for better readability
-    return name.replace(/\(([^)]+)\)/g, " ($1)");
+    // Ensure name is a string
+    if (!name || typeof name !== 'string') return name;
+    
+    // Check if we're on Netlify
+    if (window.location.hostname.includes('netlify.app')) {
+        // On Netlify, return original name without any formatting
+        return name;
+    } else {
+        // For local development, format for better readability
+        return name.replace(/\(([^)]+)\)/g, " ($1)");
+    }
 }
 
 // Improve loading state handler
@@ -166,7 +67,8 @@ async function addToCart(productId) {
     setLoading(button, true);
     
     try {
-        const product = products.find(p => p.id === productId);
+        // Get products from the global window object
+        const product = window.products.find(p => p.id === productId);
         if (!product) throw new Error('Product not found');
         
         // Simulate network request
@@ -297,7 +199,7 @@ function displayCart() {
                      onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
             </div>
             <div class="cart-item-details">
-                <h3>${formatProductName(item.name)}</h3>
+                <h3>${item.name}</h3>
                 <p class="price">Rs ${item.price.toFixed(2)}</p>
                 <div class="quantity-control">
                     <button class="quantity-btn minus" data-id="${item.id}">-</button>
@@ -451,7 +353,8 @@ function initializeProductPage() {
         return;
     }
     
-    const product = products.find(p => p.id === productId);
+    // Get product from window.products (the global object)
+    const product = window.products.find(p => p.id === productId);
     
     if (!product) {
         window.location.href = 'products.html';
@@ -471,7 +374,7 @@ function initializeProductPage() {
                          onerror="this.src='https://via.placeholder.com/500x500?text=Earrings'; this.classList.add('loaded');">
                 </div>
                 <div class="product-info">
-                    <h1>${formatProductName(product.name)}</h1>
+                    <h1>${product.name}</h1>
                     <p class="price">Rs ${product.price.toFixed(2)}</p>
                     <div class="product-description">
                         <p>${product.description}</p>
@@ -533,7 +436,8 @@ function displayProducts(filteredProducts = null) {
         return;
     }
     
-    const productsToDisplay = filteredProducts || products;
+    // Use window.products (the global object) when no filtered products
+    const productsToDisplay = filteredProducts || window.products;
     
     // Debug info for Netlify deployment
     console.log(`Displaying ${productsToDisplay.length} products`);
@@ -572,7 +476,7 @@ function displayProducts(filteredProducts = null) {
                 </div>
             </div>
             <div class="product-info">
-                <h3>${formatProductName(product.name)}</h3>
+                <h3>${product.name}</h3>
                 <p class="price">Rs ${product.price.toFixed(2)}</p>
             </div>
         `;
@@ -610,7 +514,8 @@ function filterProducts(category) {
         return;
     }
     
-    const filtered = products.filter(product => product.category === category);
+    // Filter the global products array
+    const filtered = window.products.filter(product => product.category === category);
     displayProducts(filtered);
 }
 
@@ -680,9 +585,8 @@ function initializeCheckout() {
         cart.forEach(item => {
             const itemTotal = item.price * item.quantity;
             cartTotal += itemTotal;
-            // Format each product name with proper spacing
-            const formattedName = formatProductName(item.name);
-            cartItems.push(`${formattedName} x${item.quantity} - Rs ${itemTotal.toFixed(2)}`);
+            // Use original name format for WhatsApp
+            cartItems.push(`${item.name} x${item.quantity} - Rs ${itemTotal.toFixed(2)}`);
         });
         
         // Create WhatsApp message
@@ -818,6 +722,11 @@ function updateCartForNetlify() {
 
 // Document ready functions
 document.addEventListener('DOMContentLoaded', function() {
+    // Check if products have been loaded
+    if (!window.products) {
+        console.error('Products data not loaded. Make sure products-data.js is included before main.js');
+    }
+    
     // Update cart count on page load
     updateCartCount();
     

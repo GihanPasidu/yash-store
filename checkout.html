@@ -95,6 +95,7 @@
         </div>
     </div>
 
+    <script src="js/products-data.js"></script>
     <script src="js/main.js"></script>
     <script>
         // Netlify-specific checkout page initialization
@@ -172,9 +173,8 @@
                     cart.forEach(item => {
                         const itemTotal = item.price * item.quantity;
                         cartTotal += itemTotal;
-                        // Format each product name with proper spacing
-                        const formattedName = item.name.replace(/\(([^)]+)\)/g, " ($1)");
-                        cartItems.push(`${formattedName} x${item.quantity} - Rs ${itemTotal.toFixed(2)}`);
+                        // Use original item names without modification on Netlify
+                        cartItems.push(`${item.name} x${item.quantity} - Rs ${itemTotal.toFixed(2)}`);
                     });
                     
                     // Create WhatsApp message
