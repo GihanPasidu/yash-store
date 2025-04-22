@@ -674,7 +674,9 @@ function initializeCheckout() {
         cart.forEach(item => {
             const itemTotal = item.price * item.quantity;
             cartTotal += itemTotal;
-            cartItems.push(`${item.name} x${item.quantity} - Rs ${itemTotal.toFixed(2)}`);
+            // Format each product name with proper spacing
+            const formattedName = item.name.replace(/\(([^)]+)\)/g, " ($1)");
+            cartItems.push(`${formattedName} x${item.quantity} - Rs ${itemTotal.toFixed(2)}`);
         });
         
         // Create WhatsApp message

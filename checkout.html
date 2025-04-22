@@ -156,7 +156,9 @@
                     cart.forEach(item => {
                         const itemTotal = item.price * item.quantity;
                         cartTotal += itemTotal;
-                        cartItems.push(`${item.name} x${item.quantity} - Rs ${itemTotal.toFixed(2)}`);
+                        // Format each product name with proper spacing
+                        const formattedName = item.name.replace(/\(([^)]+)\)/g, " ($1)");
+                        cartItems.push(`${formattedName} x${item.quantity} - Rs ${itemTotal.toFixed(2)}`);
                     });
                     
                     // Create WhatsApp message
@@ -166,10 +168,7 @@
                     message += `WhatsApp: ${phone}\n\n`;
                     
                     message += `*Order Summary:*\n`;
-                    cartItems.forEach(item => {
-                        message += `${item}\n`;
-                    });
-                    
+                    message += `${cartItems.join('\n')}\n`;
                     message += `\n*Total Amount: Rs ${cartTotal.toFixed(2)}*`;
                     
                     // Encode the message for URL
