@@ -12,19 +12,13 @@ function updateCartCount() {
     }
 }
 
-// Update utility function for consistent name formatting that works on Netlify
+// Update utility function for consistent name formatting
 function formatProductName(name) {
     // Ensure name is a string
     if (!name || typeof name !== 'string') return name;
-    
-    // Check if we're on Netlify
-    if (window.location.hostname.includes('netlify.app')) {
-        // On Netlify, return original name without any formatting
-        return name;
-    } else {
-        // For local development, format for better readability
-        return name.replace(/\(([^)]+)\)/g, " ($1)");
-    }
+
+    // We don't need to check for Netlify anymore as our product names are now formatted consistently
+    return name;
 }
 
 // Improve loading state handler

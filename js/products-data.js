@@ -5,18 +5,18 @@
 const products = [
     {
         id: 1,
-        name: "Black Earrings",
+        name: "Black Stud Earrings",
         price: 30.00,
         image: "https://i.pinimg.com/736x/93/ee/51/93ee51bb62b51df9e6b435201e5447c9.jpg",
-        description: "Simple, modern Earrings with a minimalist design.",
+        description: "Elegant black stud earrings with a minimalist design, perfect for both casual and formal occasions.",
         category: "gold"
     },
     {
         id: 2,
-        name: "Flower Earrings(White)",
+        name: "White Flower Earrings",
         price: 50.00,
         image: "https://i.pinimg.com/474x/cb/f8/f1/cbf8f16368fd24af8e6ed9ff776c0c41.jpg",
-        description: "Simple, modern Earrings with a minimalist design.",
+        description: "Delicate white flower-shaped earrings that add a touch of spring to any outfit.",
         category: "crystal"
     },
     {
@@ -106,6 +106,30 @@ const products = [
         image: "https://i.pinimg.com/736x/b2/dd/22/b2dd220f9cceaf90421dd57aa80a6a32.jpg",
         description: "Simple, modern Earrings with a minimalist design.",
         category: "beaded"
+    },
+    {
+        id: 14,
+        name: "Gold Hoop Earrings",
+        price: 65.00,
+        image: "https://i.pinimg.com/736x/d8/e9/6c/d8e96c9c4f7a4f7cfb0a4ce47999b0e1.jpg",
+        description: "Timeless gold hoop earrings with a modern twist, perfect for elevating any look.",
+        category: "gold"
+    },
+    {
+        id: 15,
+        name: "Crystal Drop Earrings",
+        price: 75.00,
+        image: "https://i.pinimg.com/736x/78/4f/15/784f15c8755d0ec45d8f7971a4d26467.jpg",
+        description: "Sparkling crystal drop earrings that catch the light from every angle.",
+        category: "crystal"
+    },
+    {
+        id: 16,
+        name: "Pearl Stud Earrings",
+        price: 55.00,
+        image: "https://i.pinimg.com/736x/19/13/33/1913338fbf3e7c14d9da5d12f4cfc32f.jpg",
+        description: "Classic pearl stud earrings that add elegance to any outfit, day or night.",
+        category: "pearl"
     }
 ];
 
