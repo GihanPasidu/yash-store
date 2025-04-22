@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/pages/cart.css">
     <link rel="stylesheet" href="css/pages/checkout.css">
+    <link rel="stylesheet" href="css/components/notifications.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
@@ -79,6 +80,21 @@
         </div>
     </footer>
     
+    <div class="order-success-modal" id="orderSuccessModal">
+        <div class="order-success-content">
+            <div class="order-success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2 class="order-success-title">Thank You for Your Order!</h2>
+            <p class="order-success-message">We're redirecting you to WhatsApp to complete your order</p>
+            <div class="order-success-loader">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/main.js"></script>
     <script>
         // Netlify-specific checkout page initialization
@@ -180,25 +196,28 @@
                     // Clear cart
                     localStorage.removeItem('cart');
                     
-                    // Redirect to WhatsApp - FIXED: Open in new window and ensure proper launch
-                    // Show success message first
-                    alert("Thank you for your order! Redirecting you to WhatsApp to complete your order.");
+                    // Show custom success modal instead of alert
+                    const orderSuccessModal = document.getElementById('orderSuccessModal');
+                    orderSuccessModal.classList.add('show');
                     
-                    // Use window.open to ensure WhatsApp opens properly
-                    const whatsappWindow = window.open(whatsappURL, '_blank');
-                    
-                    // Fallback if window.open is blocked
-                    if (!whatsappWindow || whatsappWindow.closed || typeof whatsappWindow.closed === 'undefined') {
-                        // Direct location change as fallback
-                        window.location.href = whatsappURL;
+                    // Redirect after showing the modal
+                    setTimeout(() => {
+                        // Use window.open to ensure WhatsApp opens properly
+                        const whatsappWindow = window.open(whatsappURL, '_blank');
                         
-                        // Additional fallback message if needed
-                        setTimeout(() => {
-                            if (confirm("If WhatsApp didn't open automatically, click OK to try again.")) {
-                                window.location.href = whatsappURL;
-                            }
-                        }, 2000);
-                    }
+                        // Fallback if window.open is blocked
+                        if (!whatsappWindow || whatsappWindow.closed || typeof whatsappWindow.closed === 'undefined') {
+                            // Direct location change as fallback
+                            window.location.href = whatsappURL;
+                            
+                            // Additional fallback message if needed
+                            setTimeout(() => {
+                                if (confirm("If WhatsApp didn't open automatically, click OK to try again.")) {
+                                    window.location.href = whatsappURL;
+                                }
+                            }, 2000);
+                        }
+                    }, 2500); // Slightly longer delay to show the modal
                 });
             }
         });

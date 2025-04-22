@@ -120,6 +120,12 @@ function updateCartCount() {
     }
 }
 
+// Add a utility function for consistent name formatting
+function formatProductName(name) {
+    // Ensure proper spacing around parentheses for better readability
+    return name.replace(/\(([^)]+)\)/g, " ($1)");
+}
+
 // Improve loading state handler
 function setLoading(element, isLoading) {
     if (!element) return;
@@ -291,7 +297,7 @@ function displayCart() {
                      onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
             </div>
             <div class="cart-item-details">
-                <h3>${item.name}</h3>
+                <h3>${formatProductName(item.name)}</h3>
                 <p class="price">Rs ${item.price.toFixed(2)}</p>
                 <div class="quantity-control">
                     <button class="quantity-btn minus" data-id="${item.id}">-</button>
@@ -465,7 +471,7 @@ function initializeProductPage() {
                          onerror="this.src='https://via.placeholder.com/500x500?text=Earrings'; this.classList.add('loaded');">
                 </div>
                 <div class="product-info">
-                    <h1>${product.name}</h1>
+                    <h1>${formatProductName(product.name)}</h1>
                     <p class="price">Rs ${product.price.toFixed(2)}</p>
                     <div class="product-description">
                         <p>${product.description}</p>
@@ -566,7 +572,7 @@ function displayProducts(filteredProducts = null) {
                 </div>
             </div>
             <div class="product-info">
-                <h3>${product.name}</h3>
+                <h3>${formatProductName(product.name)}</h3>
                 <p class="price">Rs ${product.price.toFixed(2)}</p>
             </div>
         `;
@@ -675,7 +681,7 @@ function initializeCheckout() {
             const itemTotal = item.price * item.quantity;
             cartTotal += itemTotal;
             // Format each product name with proper spacing
-            const formattedName = item.name.replace(/\(([^)]+)\)/g, " ($1)");
+            const formattedName = formatProductName(item.name);
             cartItems.push(`${formattedName} x${item.quantity} - Rs ${itemTotal.toFixed(2)}`);
         });
         
@@ -743,7 +749,7 @@ function displayCheckoutSummary() {
             if (item && item.price && item.quantity) {
                 const itemTotal = item.price * item.quantity;
                 total += itemTotal;
-                console.log(`Item ${item.name}: ${item.quantity} x ${item.price} = ${itemTotal}`);
+                console.log(`Item ${formatProductName(item.name)}: ${item.quantity} x ${item.price} = ${itemTotal}`);
             }
         });
         

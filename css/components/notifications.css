@@ -1,0 +1,119 @@
+/* Custom Notifications and Modals */
+
+/* Order Success Modal */
+.order-success-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.order-success-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.order-success-content {
+    background-color: white;
+    border-radius: 10px;
+    padding: 40px 30px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(20px);
+    transition: transform 0.4s ease;
+    position: relative;
+}
+
+.order-success-modal.show .order-success-content {
+    transform: translateY(0);
+}
+
+.order-success-icon {
+    width: 80px;
+    height: 80px;
+    background-color: #27ae60;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 25px;
+    box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+}
+
+.order-success-icon i {
+    color: white;
+    font-size: 40px;
+}
+
+.order-success-title {
+    font-size: 24px;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-family: 'Playfair Display', serif;
+}
+
+.order-success-message {
+    color: var(--secondary-color);
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.order-success-loader {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.order-success-loader .dot {
+    width: 8px;
+    height: 8px;
+    margin: 0 5px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+.order-success-loader .dot:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.order-success-loader .dot:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(0.8); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+/* Responsive Styles */
+@media (max-width: 480px) {
+    .order-success-content {
+        padding: 30px 20px;
+    }
+    
+    .order-success-icon {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 20px;
+    }
+    
+    .order-success-icon i {
+        font-size: 30px;
+    }
+    
+    .order-success-title {
+        font-size: 20px;
+    }
+}
