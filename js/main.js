@@ -602,14 +602,46 @@ function initializeCheckout() {
     checkoutForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Here you would normally send the order to a server
-        // For now, we'll just clear the cart and show a success message
+        // Get form data
+        const fullName = document.getElementById('fullname').value;
+        const phone = document.getElementById('phone').value;
         
+        // Calculate cart total
+        let cartTotal = 0;
+        const cartItems = [];
+        
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            cartTotal += itemTotal;
+            cartItems.push(`${item.name} x${item.quantity} - Rs ${itemTotal.toFixed(2)}`);
+        });
+        
+        // Create WhatsApp message
+        let message = `*New Order from YashStore*\n\n`;
+        message += `*Customer Details:*\n`;
+        message += `Name: ${fullName}\n`;
+        message += `WhatsApp: ${phone}\n\n`;
+        
+        message += `*Order Summary:*\n`;
+        cartItems.forEach(item => {
+            message += `${item}\n`;
+        });
+        
+        message += `\n*Total Amount: Rs ${cartTotal.toFixed(2)}*`;
+        
+        // Encode the message for URL
+        const encodedMessage = encodeURIComponent(message);
+        
+        // WhatsApp API URL with your number
+        const whatsappURL = `https://wa.me/94767219661?text=${encodedMessage}`;
+        
+        // Clear cart
         localStorage.removeItem('cart');
         cart = [];
         updateCartCount();
         
-        window.location.href = 'order-confirmation.html';
+        // Redirect to WhatsApp
+        window.location.href = whatsappURL;
     });
 }
 
