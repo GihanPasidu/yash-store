@@ -232,7 +232,13 @@ function displayCart() {
     const cartSubtotal = document.getElementById('cart-subtotal');
     const cartTotal = document.getElementById('cart-total');
     
-    if (!cartContainer || !cartTotal) return;
+    if (!cartContainer || !cartTotal) {
+        console.error('Cart container or total element not found');
+        return;
+    }
+    
+    // Debug cart data to check if it's being loaded correctly
+    console.log('Current cart contents:', cart);
     
     if (cart.length === 0) {
         cartContainer.innerHTML = `
@@ -256,15 +262,29 @@ function displayCart() {
     const checkoutBtn = document.querySelector('.checkout-btn');
     if (checkoutBtn) checkoutBtn.style.display = 'block';
     
+    // Clear existing cart items
     cartContainer.innerHTML = '';
+    
+    // Reset any styles that might be interfering with display
+    cartContainer.style.display = 'block';
+    cartContainer.style.visibility = 'visible';
+    cartContainer.style.opacity = '1';
+    
     let total = 0;
     
+    // Create cart items
     cart.forEach(item => {
         const itemTotal = item.price * item.quantity;
         total += itemTotal;
         
         const cartItem = document.createElement('div');
         cartItem.className = 'cart-item';
+        
+        // Set explicit styles to ensure visibility
+        cartItem.style.display = 'grid';
+        cartItem.style.visibility = 'visible';
+        cartItem.style.opacity = '1';
+        
         cartItem.innerHTML = `
             <div class="cart-item-image">
                 <img src="${item.image}" alt="${item.name}" 
@@ -290,6 +310,7 @@ function displayCart() {
         cartContainer.appendChild(cartItem);
     });
     
+    // Update totals
     if (cartSubtotal) cartSubtotal.textContent = `Rs ${total.toFixed(2)}`;
     cartTotal.textContent = `Rs ${total.toFixed(2)}`;
     
@@ -697,59 +718,54 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentPage = window.location.pathname;
     console.log('Current page:', currentPage);
     
+    // More robust page detection for Netlify
+    const isCartPage = currentPage.includes('cart.html') || 
+                       currentPage.endsWith('/cart') || 
+                       currentPage.includes('/cart/');
+    
     // Check if we're on a mobile device
     const isMobile = window.innerWidth < 768;
+    console.log('Is mobile device:', isMobile);
     
-    // More robust page detection for Netlify (handles both /products.html and /products paths)
+    if (isCartPage) {
+        console.log('Initializing cart page');
+        
+        // Add a small delay to ensure DOM is fully loaded
+        setTimeout(() => {
+            displayCart();
+            console.log('Cart displayed');
+            
+            // For mobile, enhance touch area and ensure visibility
+            if (isMobile) {
+                const cartItems = document.getElementById('cart-items');
+                if (cartItems) {
+                    cartItems.classList.add('mobile-cart');
+                    cartItems.style.display = 'block !important';
+                    cartItems.style.visibility = 'visible !important';
+                    
+                    // Force re-render of cart items for mobile
+                    const cartItemElements = document.querySelectorAll('.cart-item');
+                    cartItemElements.forEach(item => {
+                        item.style.display = 'grid';
+                        item.style.visibility = 'visible';
+                        item.style.opacity = '1';
+                    });
+                }
+            }
+        }, 500);
+    }
+    
     if (currentPage.includes('products') || currentPage.endsWith('/')) {
         console.log('Initializing products page');
-        // Always display all products since filters are disabled
         displayProducts();
-        
-        /* Category filters temporarily disabled
-        // Setup category filters if they exist
-        const categoryFilters = document.querySelectorAll('.category-filter');
-        if (categoryFilters.length > 0) {
-            console.log('Found category filters:', categoryFilters.length);
-            
-            categoryFilters.forEach(filter => {
-                filter.addEventListener('click', function() {
-                    const category = this.getAttribute('data-category');
-                    console.log('Filtering by category:', category);
-                    
-                    // Update active class
-                    categoryFilters.forEach(f => f.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    filterProducts(category);
-                });
-            });
-        } else {
-            console.log('No category filters found');
-        }
-        */
     }
     
     if (currentPage.includes('product-details.html')) {
         initializeProductPage();
     }
     
-    if (currentPage.includes('cart.html')) {
-        displayCart();
-        
-        // For mobile, enhance touch area
-        if (isMobile) {
-            const cartItems = document.getElementById('cart-items');
-            if (cartItems) {
-                cartItems.classList.add('mobile-cart');
-            }
-        }
-    }
-    
     if (currentPage.includes('checkout.html')) {
         initializeCheckout();
-        
-        // Display cart items in checkout summary
         displayCheckoutSummary();
     }
     

@@ -96,6 +96,23 @@
                 const cartItems = document.getElementById('cart-items');
                 if (cartItems) {
                     cartItems.classList.add('mobile-cart');
+                    
+                    // Force style overrides for Netlify
+                    setTimeout(function() {
+                        cartItems.style.display = 'block';
+                        cartItems.style.visibility = 'visible';
+                        cartItems.style.opacity = '1';
+                        
+                        // Also ensure each cart item is visible
+                        const items = document.querySelectorAll('.cart-item');
+                        items.forEach(item => {
+                            item.style.display = 'grid';
+                            item.style.visibility = 'visible';
+                            item.style.opacity = '1';
+                        });
+                        
+                        console.log('Applied visibility fixes for mobile cart');
+                    }, 1000);
                 }
             }
         });
