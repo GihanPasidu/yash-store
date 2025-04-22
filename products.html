@@ -70,9 +70,25 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Initializing products page for Netlify');
             
+            // Prevent multiple product rendering attempts when main.js is working correctly
+            let productsRendered = false;
+            
             // Force products to display correctly on Netlify with multiple attempts
             function attemptDisplayProducts() {
-                console.log('Attempting to display products...');
+                console.log('Attempting to display products...', productsRendered ? '(already rendered)' : '(first attempt)');
+                
+                // Only proceed if products haven't been successfully rendered yet
+                if (productsRendered) return;
+                
+                const productsGrid = document.getElementById('products-grid');
+                if (!productsGrid) return;
+                
+                // Check if products have already been rendered
+                if (productsGrid.querySelectorAll('.product-card').length > 0) {
+                    console.log('Products already rendered, skipping duplicate render');
+                    productsRendered = true;
+                    return;
+                }
                 
                 if (typeof displayProducts === 'function') {
                     displayProducts();
@@ -80,11 +96,12 @@
                     
                     // Check if products were actually rendered
                     setTimeout(() => {
-                        const productsGrid = document.getElementById('products-grid');
-                        if (productsGrid && (productsGrid.children.length <= 1 || 
-                            productsGrid.querySelector('.loading-products'))) {
+                        if (productsGrid.querySelectorAll('.product-card').length > 0) {
+                            console.log('Products rendered successfully');
+                            productsRendered = true;
+                        } else if (productsGrid.querySelector('.loading-products')) {
                             console.log('Products not rendered properly, retrying...');
-                            displayProducts(); // Try again
+                            if (!productsRendered) displayProducts(); // Try again only if not already rendered
                         }
                     }, 500);
                 } else {
@@ -93,13 +110,13 @@
             }
             
             // Try immediate display
-            attemptDisplayProducts();
+            setTimeout(attemptDisplayProducts, 100);
             
-            // Try again after a short delay
-            setTimeout(attemptDisplayProducts, 300);
+            // Try again after a short delay if needed
+            setTimeout(attemptDisplayProducts, 500);
             
-            // Final attempt with a longer delay
-            setTimeout(attemptDisplayProducts, 1000);
+            // Final attempt with a longer delay if still needed
+            setTimeout(attemptDisplayProducts, 1500);
             
             // Fallback method if products still don't load
             setTimeout(() => {

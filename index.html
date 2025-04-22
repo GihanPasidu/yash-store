@@ -99,66 +99,11 @@
         <section class="featured">
             <div class="container">
                 <h2 class="section-title">Featured Collection</h2>
-                <div class="products-grid">
-                    <div class="product-card">
-                        <div class="product-image loading">
-                            <img src="https://i.pinimg.com/736x/93/ee/51/93ee51bb62b51df9e6b435201e5447c9.jpg" 
-                                 alt="Black Stud Earrings" 
-                                 onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
-                            <div class="product-overlay">
-                                <button class="add-to-cart" data-id="1">Add to Cart</button>
-                                <button class="view-details" data-id="1">View Details</button>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <h3>Black Stud Earrings</h3>
-                            <p class="price">Rs 30.00</p>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-image loading">
-                            <img src="https://i.pinimg.com/474x/cb/f8/f1/cbf8f16368fd24af8e6ed9ff776c0c41.jpg" 
-                                 alt="White Flower Earrings"
-                                 onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
-                            <div class="product-overlay">
-                                <button class="add-to-cart" data-id="2">Add to Cart</button>
-                                <button class="view-details" data-id="2">View Details</button>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <h3>White Flower Earrings</h3>
-                            <p class="price">Rs 50.00</p>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-image loading">
-                            <img src="https://i.pinimg.com/736x/d8/e9/6c/d8e96c9c4f7a4f7cfb0a4ce47999b0e1.jpg" 
-                                 alt="Gold Hoop Earrings" 
-                                 onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
-                            <div class="product-overlay">
-                                <button class="add-to-cart" data-id="14">Add to Cart</button>
-                                <button class="view-details" data-id="14">View Details</button>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <h3>Gold Hoop Earrings</h3>
-                            <p class="price">Rs 65.00</p>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-image loading">
-                            <img src="https://i.pinimg.com/736x/19/13/33/1913338fbf3e7c14d9da5d12f4cfc32f.jpg" 
-                                 alt="Pearl Stud Earrings" 
-                                 onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
-                            <div class="product-overlay">
-                                <button class="add-to-cart" data-id="16">Add to Cart</button>
-                                <button class="view-details" data-id="16">View Details</button>
-                            </div>
-                        </div>
-                        <div class="product-info">
-                            <h3>Pearl Stud Earrings</h3>
-                            <p class="price">Rs 55.00</p>
-                        </div>
+                <div id="featured-products" class="products-grid">
+                    <!-- Featured products will be dynamically loaded here -->
+                    <div class="loading-products">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading featured products...</p>
                     </div>
                 </div>
                 <div class="center" style="margin-top: 40px;">
@@ -182,6 +127,114 @@
         // Netlify-specific initialization
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Initializing index page for Netlify');
+            
+            // Load featured products from product data
+            const loadFeaturedProducts = function() {
+                const featuredProductsContainer = document.getElementById('featured-products');
+                if (!featuredProductsContainer) return;
+                
+                // Check if window.products is available
+                if (!window.products || !Array.isArray(window.products)) {
+                    console.warn('Products data not available yet, will retry');
+                    setTimeout(loadFeaturedProducts, 300);
+                    return;
+                }
+                
+                // Clear loading placeholder
+                featuredProductsContainer.innerHTML = '';
+                
+                // Define featured product IDs - select 4 products for the featured section
+                const featuredIds = [1, 2, 3, 13]; // Black Stud, White Flower, Gold Hoop, Pearl Stud
+                
+                // Filter products to get only the featured ones
+                const featuredProducts = window.products.filter(product => featuredIds.includes(product.id));
+                
+                // Create and append product cards
+                featuredProducts.forEach(product => {
+                    const productCard = document.createElement('div');
+                    productCard.className = 'product-card';
+                    
+                    productCard.innerHTML = `
+                        <div class="product-image loading">
+                            <img src="${product.image}" alt="${product.name}" 
+                                 onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
+                            <div class="product-overlay">
+                                <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+                                <button class="view-details" data-id="${product.id}">View Details</button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3>${product.name}</h3>
+                            <p class="price">Rs ${product.price.toFixed(2)}</p>
+                        </div>
+                    `;
+                    
+                    featuredProductsContainer.appendChild(productCard);
+                    
+                    // Handle image loading
+                    const img = productCard.querySelector('img');
+                    img.onload = function() {
+                        img.classList.add('loaded');
+                        img.parentElement.classList.remove('loading');
+                    };
+                    
+                    if (img.complete) {
+                        img.classList.add('loaded');
+                        img.parentElement.classList.remove('loading');
+                    }
+                    
+                    // Add event listeners
+                    const addToCartBtn = productCard.querySelector('.add-to-cart');
+                    if (addToCartBtn) {
+                        addToCartBtn.addEventListener('click', function() {
+                            const id = parseInt(this.getAttribute('data-id'));
+                            if (typeof addToCart === 'function') {
+                                addToCart(id);
+                            } else {
+                                // Fallback if addToCart function is not available
+                                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                                const exists = cart.find(item => item.id === id);
+                                
+                                if (exists) {
+                                    exists.quantity += 1;
+                                } else {
+                                    cart.push({
+                                        id: product.id,
+                                        name: product.name,
+                                        price: product.price,
+                                        image: product.image,
+                                        quantity: 1
+                                    });
+                                }
+                                
+                                localStorage.setItem('cart', JSON.stringify(cart));
+                                
+                                // Update cart count
+                                const cartCount = document.getElementById('cart-count');
+                                if (cartCount) {
+                                    const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+                                    cartCount.textContent = totalItems.toString();
+                                }
+                                
+                                alert(`${product.name} added to cart!`);
+                            }
+                        });
+                    }
+                    
+                    const viewDetailsBtn = productCard.querySelector('.view-details');
+                    if (viewDetailsBtn) {
+                        viewDetailsBtn.addEventListener('click', function() {
+                            const id = parseInt(this.getAttribute('data-id'));
+                            window.location.href = `product-details.html?id=${id}`;
+                        });
+                    }
+                });
+                
+                console.log('Featured products loaded successfully');
+            };
+            
+            // Load featured products
+            loadFeaturedProducts();
             
             // Fix for Netlify SPA routing
             document.querySelectorAll('a').forEach(link => {

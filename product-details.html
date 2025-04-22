@@ -113,15 +113,103 @@
                                 </div>
                             `;
                             
-                            // Set up event listeners
-                            document.getElementById('add-to-cart-btn').addEventListener('click', function() {
-                                const id = parseInt(this.getAttribute('data-id'));
-                                if (typeof addToCart === 'function') {
-                                    addToCart(id);
-                                }
-                            });
+                            // Set up event listeners - using direct click handler for more reliability
+                            const addToCartBtn = document.getElementById('add-to-cart-btn');
+                            if (addToCartBtn) {
+                                addToCartBtn.addEventListener('click', function() {
+                                    const id = parseInt(this.getAttribute('data-id'));
+                                    console.log('Add to cart button clicked with product ID:', id);
+                                    
+                                    // Direct implementation to avoid depending on external function
+                                    try {
+                                        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                                        const product = window.products.find(p => p.id === id);
+                                        
+                                        if (product) {
+                                            // Show loading state
+                                            addToCartBtn.classList.add('loading');
+                                            addToCartBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+                                            addToCartBtn.disabled = true;
+                                            
+                                            // Add item to cart with delay to show loading state
+                                            setTimeout(() => {
+                                                const existingItem = cart.find(item => item.id === id);
+                                                
+                                                if (existingItem) {
+                                                    existingItem.quantity += 1;
+                                                } else {
+                                                    cart.push({
+                                                        id: product.id,
+                                                        name: product.name,
+                                                        price: product.price,
+                                                        image: product.image,
+                                                        quantity: 1
+                                                    });
+                                                }
+                                                
+                                                // Save to localStorage
+                                                localStorage.setItem('cart', JSON.stringify(cart));
+                                                
+                                                // Update cart count
+                                                const cartCount = document.getElementById('cart-count');
+                                                if (cartCount) {
+                                                    cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0).toString();
+                                                }
+                                                
+                                                // Show success message
+                                                alert(`${product.name} added to cart!`);
+                                                
+                                                // Reset button state
+                                                addToCartBtn.classList.remove('loading');
+                                                addToCartBtn.innerHTML = 'Add to Cart';
+                                                addToCartBtn.disabled = false;
+                                                
+                                            }, 800); // Simulate processing time
+                                        }
+                                    } catch (error) {
+                                        console.error('Error adding to cart:', error);
+                                        alert('Failed to add item to cart. Please try again.');
+                                        
+                                        // Reset button in case of error
+                                        addToCartBtn.classList.remove('loading');
+                                        addToCartBtn.innerHTML = 'Add to Cart';
+                                        addToCartBtn.disabled = false;
+                                    }
+                                });
+                                
+                                console.log('Successfully added event listener to Add to Cart button');
+                            } else {
+                                console.error('Add to cart button not found in the DOM');
+                            }
+                            
+                            // Add wishlist functionality
+                            const wishlistBtn = document.querySelector('.wishlist-btn');
+                            if (wishlistBtn) {
+                                wishlistBtn.addEventListener('click', function() {
+                                    const icon = this.querySelector('i');
+                                    if (icon.classList.contains('far')) {
+                                        icon.classList.remove('far');
+                                        icon.classList.add('fas');
+                                        icon.style.color = '#e74c3c';
+                                        alert('Added to wishlist!');
+                                    } else {
+                                        icon.classList.remove('fas');
+                                        icon.classList.add('far');
+                                        icon.style.color = '';
+                                        alert('Removed from wishlist');
+                                    }
+                                });
+                            }
                         }
+                    } else {
+                        console.error('Product not found with ID:', productId);
+                        alert('Product not found. Redirecting to products page.');
+                        window.location.href = 'products.html';
                     }
+                } else {
+                    console.error('No product ID found in URL');
+                    alert('No product selected. Redirecting to products page.');
+                    window.location.href = 'products.html';
                 }
             }, 300);
         });

@@ -4,11 +4,28 @@
 // Cart functionality
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-// Update cart count
+// Enhanced cart count update function that works reliably
 function updateCartCount() {
     const cartCount = document.getElementById('cart-count');
     if (cartCount) {
-        cartCount.textContent = cart.reduce((total, item) => total + item.quantity, 0).toString();
+        // Get the latest cart data from localStorage to ensure we have fresh data
+        const latestCart = JSON.parse(localStorage.getItem('cart') || '[]');
+        
+        // Calculate total items in cart
+        const totalItems = latestCart.reduce((total, item) => total + item.quantity, 0);
+        
+        // Update the cart count display
+        cartCount.textContent = totalItems.toString();
+        
+        // Add a visual indicator when count changes
+        cartCount.classList.add('updating');
+        setTimeout(() => {
+            cartCount.classList.remove('updating');
+        }, 300);
+        
+        console.log('Cart count updated to:', totalItems);
+    } else {
+        console.warn('Cart count element not found');
     }
 }
 
@@ -49,21 +66,32 @@ function setLoading(element, isLoading) {
     }
 }
 
-// Enhance add to cart function
+// Enhanced add to cart function with fallback mechanism
 async function addToCart(productId) {
-    const button = document.querySelector(`button[data-id="${productId}"]`);
-    
-    // Prevent double-clicking by checking if button is already in loading state
-    if (button.classList.contains('loading') || button.hasAttribute('disabled')) {
-        return;
-    }
-    
-    setLoading(button, true);
+    console.log('addToCart called with ID:', productId);
     
     try {
+        const button = document.querySelector(`button[data-id="${productId}"]`);
+        
+        // Handle case where button might not be found
+        if (button) {
+            // Prevent double-clicking by checking if button is already in loading state
+            if (button.classList.contains('loading') || button.hasAttribute('disabled')) {
+                console.log('Button is already in loading state, ignoring click');
+                return;
+            }
+            
+            setLoading(button, true);
+        } else {
+            console.warn('Button not found for product ID:', productId);
+        }
+        
         // Get products from the global window object
         const product = window.products.find(p => p.id === productId);
-        if (!product) throw new Error('Product not found');
+        if (!product) {
+            console.error('Product not found with ID:', productId);
+            throw new Error('Product not found');
+        }
         
         // Simulate network request
         await new Promise(resolve => setTimeout(resolve, 800));
@@ -84,14 +112,29 @@ async function addToCart(productId) {
         
         localStorage.setItem('cart', JSON.stringify(cart));
         updateCartCount();
-        showNotification(`${product.name} added to cart!`, 'success');
+        
+        // Use alert as fallback if showNotification is not available
+        try {
+            showNotification(`${product.name} added to cart!`, 'success');
+        } catch (notificationError) {
+            console.warn('showNotification failed, using alert instead');
+            alert(`${product.name} added to cart!`);
+        }
     } catch (error) {
-        showNotification('Failed to add item to cart', 'error');
+        console.error('Error in addToCart:', error);
+        try {
+            showNotification('Failed to add item to cart', 'error');
+        } catch (notificationError) {
+            alert('Failed to add item to cart');
+        }
     } finally {
         // Add a slight delay before enabling the button again
         // to prevent accidental double-clicks
         setTimeout(() => {
-            setLoading(button, false);
+            const button = document.querySelector(`button[data-id="${productId}"]`);
+            if (button) {
+                setLoading(button, false);
+            }
         }, 300);
     }
 }
@@ -142,6 +185,9 @@ function displayCart() {
     // Debug cart data to check if it's being loaded correctly
     console.log('Current cart contents:', cart);
     
+    // Force the cart container to be visible with !important styles
+    cartContainer.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; height: auto !important; overflow: visible !important;';
+    
     if (cart.length === 0) {
         cartContainer.innerHTML = `
             <div class="cart-empty-placeholder">
@@ -167,11 +213,6 @@ function displayCart() {
     // Clear existing cart items
     cartContainer.innerHTML = '';
     
-    // Reset any styles that might be interfering with display
-    cartContainer.style.display = 'block';
-    cartContainer.style.visibility = 'visible';
-    cartContainer.style.opacity = '1';
-    
     let total = 0;
     
     // Create cart items
@@ -182,10 +223,8 @@ function displayCart() {
         const cartItem = document.createElement('div');
         cartItem.className = 'cart-item';
         
-        // Set explicit styles to ensure visibility
-        cartItem.style.display = 'grid';
-        cartItem.style.visibility = 'visible';
-        cartItem.style.opacity = '1';
+        // Set explicit styles to ensure visibility with !important flags
+        cartItem.style.cssText = 'display: grid !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 5 !important;';
         
         cartItem.innerHTML = `
             <div class="cart-item-image">
@@ -216,14 +255,19 @@ function displayCart() {
     if (cartSubtotal) cartSubtotal.textContent = `Rs ${total.toFixed(2)}`;
     cartTotal.textContent = `Rs ${total.toFixed(2)}`;
     
+    // Force a DOM repaint to ensure cart items are visible
+    setTimeout(() => {
+        document.querySelectorAll('.cart-item').forEach(item => {
+            item.style.cssText = 'display: grid !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 5 !important;';
+        });
+    }, 100);
+    
     // Add event listeners with more aggressive binding
     setTimeout(() => {
         // Minus button handler
         document.querySelectorAll('.minus').forEach(button => {
-            // Remove any existing listeners
             button.replaceWith(button.cloneNode(true));
             
-            // Get the fresh element
             const newButton = document.querySelector(`.minus[data-id="${button.getAttribute('data-id')}"]`);
             if (newButton) {
                 newButton.addEventListener('click', function() {
@@ -237,10 +281,8 @@ function displayCart() {
         
         // Plus button handler
         document.querySelectorAll('.plus').forEach(button => {
-            // Remove any existing listeners
             button.replaceWith(button.cloneNode(true));
             
-            // Get the fresh element
             const newButton = document.querySelector(`.plus[data-id="${button.getAttribute('data-id')}"]`);
             if (newButton) {
                 newButton.addEventListener('click', function() {
@@ -254,10 +296,8 @@ function displayCart() {
         
         // Quantity input handler
         document.querySelectorAll('.quantity-input').forEach(input => {
-            // Remove any existing listeners
             input.replaceWith(input.cloneNode(true));
             
-            // Get the fresh element
             const newInput = document.querySelector(`.quantity-input[data-id="${input.getAttribute('data-id')}"]`);
             if (newInput) {
                 newInput.addEventListener('change', function() {
@@ -271,10 +311,8 @@ function displayCart() {
         
         // Remove button handler
         document.querySelectorAll('.remove-item').forEach(button => {
-            // Remove any existing listeners
             button.replaceWith(button.cloneNode(true));
             
-            // Get the fresh element
             const newButton = document.querySelector(`.remove-item[data-id="${button.getAttribute('data-id')}"]`);
             if (newButton) {
                 newButton.addEventListener('click', function() {
@@ -337,88 +375,119 @@ function handleImageLoad(img) {
     }
 }
 
-// Initialize product details page
+// Enhanced product details page initialization
 function initializeProductPage() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = parseInt(urlParams.get('id'));
+    console.log('Initializing product details page');
     
-    if (!productId) {
-        window.location.href = 'products.html';
-        return;
-    }
-    
-    // Get product from window.products (the global object)
-    const product = window.products.find(p => p.id === productId);
-    
-    if (!product) {
-        window.location.href = 'products.html';
-        return;
-    }
-    
-    const productDetails = document.getElementById('product-details');
-    
-    if (!productDetails) return;
-    
-    // Add a slight delay to simulate loading (optional)
-    setTimeout(() => {
-        productDetails.innerHTML = `
-            <div class="product-details">
-                <div class="product-image">
-                    <img src="${product.image}" alt="${product.name}" 
-                         onerror="this.src='https://via.placeholder.com/500x500?text=Earrings'; this.classList.add('loaded');">
-                </div>
-                <div class="product-info">
-                    <h1>${product.name}</h1>
-                    <p class="price">Rs ${product.price.toFixed(2)}</p>
-                    <div class="product-description">
-                        <p>${product.description}</p>
-                        <p>These beautiful earrings are perfect for any occasion, from casual outings to formal events. Each piece is carefully crafted to ensure the highest quality.</p>
-                    </div>
-                    <div class="product-features">
-                        <h3>Features</h3>
-                        <ul class="features-list">
-                            <li>High-quality materials</li>
-                            <li>Handcrafted design</li>
-                            <li>Comfortable to wear</li>
-                            <li>Elegant packaging</li>
-                        </ul>
-                    </div>
-                    <div class="product-actions">
-                        <button id="add-to-cart-btn" class="btn" data-id="${product.id}">Add to Cart</button>
-                        <button class="wishlist-btn" title="Add to Wishlist"><i class="far fa-heart"></i></button>
-                    </div>
-                </div>
-            </div>
-        `;
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = parseInt(urlParams.get('id'));
         
-        const img = productDetails.querySelector('img');
-        handleImageLoad(img);
+        console.log('Product ID from URL:', productId);
         
-        // Add event listener for add to cart button
-        document.getElementById('add-to-cart-btn').addEventListener('click', function() {
-            const productId = parseInt(this.getAttribute('data-id'));
-            addToCart(productId);
-        });
-        
-        // Add wishlist functionality (currently just visual)
-        const wishlistBtn = document.querySelector('.wishlist-btn');
-        if (wishlistBtn) {
-            wishlistBtn.addEventListener('click', function() {
-                const icon = this.querySelector('i');
-                if (icon.classList.contains('far')) {
-                    icon.classList.remove('far');
-                    icon.classList.add('fas');
-                    icon.style.color = '#e74c3c';
-                    showNotification('Added to wishlist!', 'success');
-                } else {
-                    icon.classList.remove('fas');
-                    icon.classList.add('far');
-                    icon.style.color = '';
-                    showNotification('Removed from wishlist', 'info');
-                }
-            });
+        if (!productId) {
+            console.warn('No product ID found in URL parameters');
+            window.location.href = 'products.html';
+            return;
         }
-    }, 500);
+        
+        // Get product from window.products (the global object)
+        const product = window.products.find(p => p.id === productId);
+        
+        if (!product) {
+            console.error('Product not found with ID:', productId);
+            window.location.href = 'products.html';
+            return;
+        }
+        
+        const productDetails = document.getElementById('product-details');
+        
+        if (!productDetails) {
+            console.error('Product details container not found');
+            return;
+        }
+        
+        console.log('Rendering product details for:', product.name);
+        
+        // Add a slight delay to simulate loading (optional)
+        setTimeout(() => {
+            productDetails.innerHTML = `
+                <div class="product-details">
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}" 
+                             onerror="this.src='https://via.placeholder.com/500x500?text=Earrings'; this.classList.add('loaded');">
+                    </div>
+                    <div class="product-info">
+                        <h1>${product.name}</h1>
+                        <p class="price">Rs ${product.price.toFixed(2)}</p>
+                        <div class="product-description">
+                            <p>${product.description}</p>
+                            <p>These beautiful earrings are perfect for any occasion, from casual outings to formal events. Each piece is carefully crafted to ensure the highest quality.</p>
+                        </div>
+                        <div class="product-features">
+                            <h3>Features</h3>
+                            <ul class="features-list">
+                                <li>High-quality materials</li>
+                                <li>Handcrafted design</li>
+                                <li>Comfortable to wear</li>
+                                <li>Elegant packaging</li>
+                            </ul>
+                        </div>
+                        <div class="product-actions">
+                            <button id="add-to-cart-btn" class="btn" data-id="${product.id}">Add to Cart</button>
+                            <button class="wishlist-btn" title="Add to Wishlist"><i class="far fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const img = productDetails.querySelector('img');
+            handleImageLoad(img);
+            
+            // Add event listener for add to cart button with multiple approaches
+            const addToCartBtn = document.getElementById('add-to-cart-btn');
+            
+            if (addToCartBtn) {
+                console.log('Found Add to Cart button, adding click listener');
+                
+                // Use both approaches to maximize chances of working
+                addToCartBtn.onclick = function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    console.log('Add to cart button clicked (via onclick) with ID:', id);
+                    addToCart(id);
+                };
+                
+                addToCartBtn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    console.log('Add to cart button clicked (via addEventListener) with ID:', id);
+                    addToCart(id);
+                });
+            } else {
+                console.error('Add to cart button not found after DOM update');
+            }
+            
+            // Add wishlist functionality (currently just visual)
+            const wishlistBtn = document.querySelector('.wishlist-btn');
+            if (wishlistBtn) {
+                wishlistBtn.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('far')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        icon.style.color = '#e74c3c';
+                        showNotification('Added to wishlist!', 'success');
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        icon.style.color = '';
+                        showNotification('Removed from wishlist', 'info');
+                    }
+                });
+            }
+        }, 300);
+    } catch (error) {
+        console.error('Error initializing product page:', error);
+    }
 }
 
 // Display products on products page
@@ -433,6 +502,12 @@ function displayProducts(filteredProducts = null) {
     // Debug info for Netlify deployment
     console.log(`Attempting to display products. Current window.products:`, window.products);
     
+    // Check if products have already been rendered to prevent duplicates
+    if (productsGrid.querySelectorAll('.product-card').length > 0) {
+        console.log('Products already rendered, skipping to prevent duplicates');
+        return;
+    }
+    
     // Handle case where window.products might not be loaded yet on Netlify
     if (!window.products || !Array.isArray(window.products)) {
         console.warn('Products data not available. Attempting to reload from source');
@@ -442,7 +517,10 @@ function displayProducts(filteredProducts = null) {
         script.src = 'js/products-data.js';
         script.onload = function() {
             console.log('Products data reloaded, displaying products');
-            setTimeout(() => displayProducts(filteredProducts), 200);
+            // Check again if products have been rendered to prevent duplicates
+            if (productsGrid.querySelectorAll('.product-card').length === 0) {
+                setTimeout(() => displayProducts(filteredProducts), 200);
+            }
         };
         document.head.appendChild(script);
         
@@ -474,9 +552,15 @@ function displayProducts(filteredProducts = null) {
     // Clear existing content
     productsGrid.innerHTML = '';
     
+    // Set a flag in the DOM to indicate we're actively rendering products
+    productsGrid.setAttribute('data-rendering', 'true');
+    
     // Add products with a slight delay between each to prevent Netlify rendering issues
     let delay = 0;
     const delayIncrement = 50; // ms between each product render
+    
+    // Create a document fragment to improve performance
+    const fragment = document.createDocumentFragment();
     
     productsToDisplay.forEach(product => {
         // Verify each product has required properties
@@ -488,6 +572,7 @@ function displayProducts(filteredProducts = null) {
         setTimeout(() => {
             const productCard = document.createElement('div');
             productCard.className = 'product-card';
+            productCard.setAttribute('data-product-id', product.id);
             
             // Ensure image path works on both local and Netlify
             const imageSrc = product.image || '';
@@ -510,7 +595,7 @@ function displayProducts(filteredProducts = null) {
             const img = productCard.querySelector('img');
             handleImageLoad(img);
             
-            productsGrid.appendChild(productCard);
+            fragment.appendChild(productCard);
             
             // Add event listeners to this specific product card
             const addToCartBtn = productCard.querySelector('.add-to-cart');
@@ -527,6 +612,15 @@ function displayProducts(filteredProducts = null) {
                     const productId = parseInt(this.getAttribute('data-id'));
                     window.location.href = `product-details.html?id=${productId}`;
                 });
+            }
+            
+            // On the last item, append the fragment to the DOM and remove rendering flag
+            if (delay === (productsToDisplay.length - 1) * delayIncrement) {
+                setTimeout(() => {
+                    productsGrid.appendChild(fragment);
+                    productsGrid.removeAttribute('data-rendering');
+                    console.log('Products rendering completed, total products:', productsGrid.querySelectorAll('.product-card').length);
+                }, 100);
             }
         }, delay);
         
@@ -554,6 +648,12 @@ function displayProducts(filteredProducts = null) {
 
 // Filter products by category
 function filterProducts(category) {
+    // Ensure we clear any rendering flags before filtering
+    const productsGrid = document.getElementById('products-grid');
+    if (productsGrid) {
+        productsGrid.removeAttribute('data-rendering');
+    }
+    
     if (category === 'all') {
         displayProducts();
         return;
@@ -745,23 +845,67 @@ function updateCartForNetlify() {
     console.log('Current page detected as:', currentPage);
     
     if (currentPage === 'cart') {
-        // Force cart display in a way that works with Netlify
+        // Force cart display in a way that works with Netlify - use multiple attempts
+        setTimeout(displayCart, 100);
+        setTimeout(displayCart, 500);
+        setTimeout(displayCart, 1000);
+        
+        // Additional more aggressive fix
         setTimeout(() => {
-            displayCart();
-            console.log('Cart display triggered for Netlify');
+            // Fallback direct DOM manipulation if displayCart doesn't work
+            const cartContainer = document.getElementById('cart-items');
+            if (!cartContainer) return;
             
-            // For mobile, apply specific fixes
-            if (window.innerWidth < 768) {
-                const cartItems = document.getElementById('cart-items');
-                if (cartItems) {
-                    cartItems.classList.add('mobile-cart');
+            // Force the container to display
+            cartContainer.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; height: auto !important;';
+            
+            // Check if cart items are showing
+            if (cartContainer.querySelectorAll('.cart-item').length === 0 && cart.length > 0) {
+                console.log('Using emergency fallback to show cart items');
+                
+                // Clear the container first
+                cartContainer.innerHTML = '';
+                
+                // Manually add each cart item
+                cart.forEach(item => {
+                    const itemTotal = item.price * item.quantity;
                     
-                    // These !important styles need to be inline for Netlify
-                    cartItems.setAttribute('style', 
-                        'display: block !important; visibility: visible !important; opacity: 1 !important;');
-                }
+                    const cartItemHTML = `
+                        <div class="cart-item" style="display: grid !important; visibility: visible !important; opacity: 1 !important;">
+                            <div class="cart-item-image">
+                                <img src="${item.image}" alt="${item.name}" 
+                                     onerror="this.src='https://via.placeholder.com/300x300?text=Earrings';">
+                            </div>
+                            <div class="cart-item-details">
+                                <h3>${item.name}</h3>
+                                <p class="price">Rs ${item.price.toFixed(2)}</p>
+                                <div class="quantity-control">
+                                    <button class="quantity-btn minus" data-id="${item.id}" style="min-height:44px;">-</button>
+                                    <input type="number" value="${item.quantity}" min="1" class="quantity-input" data-id="${item.id}">
+                                    <button class="quantity-btn plus" data-id="${item.id}" style="min-height:44px;">+</button>
+                                </div>
+                                <button class="remove-item" data-id="${item.id}" style="min-height:44px;">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </div>
+                            <div class="cart-item-price">
+                                <p class="item-total">Rs ${itemTotal.toFixed(2)}</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    cartContainer.innerHTML += cartItemHTML;
+                });
+                
+                // Update totals
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const cartSubtotal = document.getElementById('cart-subtotal');
+                const cartTotal = document.getElementById('cart-total');
+                
+                if (cartSubtotal) cartSubtotal.textContent = `Rs ${total.toFixed(2)}`;
+                if (cartTotal) cartTotal.textContent = `Rs ${total.toFixed(2)}`;
             }
-        }, 300);
+        }, 1500);
     }
 }
 
@@ -786,6 +930,89 @@ document.addEventListener('DOMContentLoaded', function() {
         updateCartCount();
         initializePageFunctions();
     }
+    
+    // Update cart count immediately on page load
+    updateCartCount();
+    
+    // Set up a recurring check to ensure cart count is always correct
+    setInterval(updateCartCount, 2000);
+    
+    // Listen for storage events (when cart is updated in another tab)
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'cart') {
+            console.log('Cart data changed in another tab');
+            updateCartCount();
+        }
+    });
+    
+    // Add global click handler to ensure add to cart works even if specific handlers fail
+    document.body.addEventListener('click', function(e) {
+        // Check if the clicked element is an add-to-cart button or inside one
+        if (e.target.classList.contains('add-to-cart') || 
+            e.target.closest('.add-to-cart') || 
+            e.target.id === 'add-to-cart-btn' || 
+            e.target.closest('#add-to-cart-btn')) {
+            
+            const button = e.target.classList.contains('add-to-cart') || e.target.id === 'add-to-cart-btn' 
+                ? e.target 
+                : e.target.closest('.add-to-cart') || e.target.closest('#add-to-cart-btn');
+            
+            const id = parseInt(button.getAttribute('data-id'));
+            console.log('Add to cart button clicked via global delegation for ID:', id);
+            
+            if (id && !isNaN(id)) {
+                addToCart(id);
+                // Prevent event from propagating further
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }
+        
+        // Handle plus button clicks with event delegation
+        if (e.target.classList.contains('plus') || e.target.closest('.plus')) {
+            const button = e.target.classList.contains('plus') ? e.target : e.target.closest('.plus');
+            const id = parseInt(button.getAttribute('data-id'));
+            console.log('Plus button clicked via delegation for ID:', id);
+            
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                updateQuantity(id, item.quantity + 1);
+                // Force reload for Netlify if needed
+                if (getCurrentPage() === 'cart') {
+                    setTimeout(displayCart, 50);
+                }
+            }
+        }
+        
+        // Handle minus button clicks with event delegation
+        if (e.target.classList.contains('minus') || e.target.closest('.minus')) {
+            const button = e.target.classList.contains('minus') ? e.target : e.target.closest('.minus');
+            const id = parseInt(button.getAttribute('data-id'));
+            console.log('Minus button clicked via delegation for ID:', id);
+            
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                updateQuantity(id, item.quantity - 1);
+                // Force reload for Netlify if needed
+                if (getCurrentPage() === 'cart') {
+                    setTimeout(displayCart, 50);
+                }
+            }
+        }
+        
+        // Handle remove button clicks with event delegation
+        if (e.target.classList.contains('remove-item') || e.target.closest('.remove-item')) {
+            const button = e.target.classList.contains('remove-item') ? e.target : e.target.closest('.remove-item');
+            const id = parseInt(button.getAttribute('data-id'));
+            console.log('Remove button clicked via delegation for ID:', id);
+            
+            removeFromCart(id);
+            // Force reload for Netlify if needed
+            if (getCurrentPage() === 'cart') {
+                setTimeout(displayCart, 50);
+            }
+        }
+    });
 });
 
 // Separate function to initialize page-specific functions
@@ -835,12 +1062,25 @@ function initializePageFunctions() {
     
     if (isProductsPage || currentPage.endsWith('/')) {
         console.log('Initializing products page');
-        // Try to display products multiple times to ensure they load
+        // Only try to display products once to prevent duplicates
         displayProducts();
         
-        // Additional attempts with delays
-        setTimeout(displayProducts, 300);
-        setTimeout(displayProducts, 1000);
+        // Set up category filter event listeners
+        document.querySelectorAll('.category-filter').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('.category-filter').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Get category and filter products
+                const category = this.getAttribute('data-category');
+                filterProducts(category);
+            });
+        });
     }
     
     if (currentPage.includes('product-details.html')) {
@@ -941,3 +1181,4 @@ function initializePageFunctions() {
         }
     });
 });
+}

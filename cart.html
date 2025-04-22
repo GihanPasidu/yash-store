@@ -92,131 +92,295 @@
     <script>
         // Netlify-specific fixes for cart functionality
         document.addEventListener('DOMContentLoaded', function() {
-            // Fix for Netlify routing
-            console.log('Initializing cart page on Netlify');
+            console.log('Initializing cart page with enhanced display mechanism');
             
-            // Apply styles with delay to ensure they override Netlify's
-            setTimeout(function() {
-                const cartItems = document.getElementById('cart-items');
-                if (cartItems) {
-                    // Force styles to be visible
-                    cartItems.setAttribute('style', 
-                        'display: block !important; visibility: visible !important; opacity: 1 !important;');
+            // Force cart rendering with multiple highly reliable methods
+            const FORCE_SHOW_STYLE = 'display: block !important; visibility: visible !important; opacity: 1 !important; height: auto !important; overflow: visible !important; position: relative !important; z-index: 9999 !important;';
+            
+            // Super reliable cart renderer - completely self-contained to avoid dependencies
+            function renderCart() {
+                console.log('Running super reliable cart renderer');
+                
+                // Get cart items container - critical element
+                const cartContainer = document.getElementById('cart-items');
+                if (!cartContainer) {
+                    console.error('Cart container not found - critical error');
+                    return;
+                }
+                
+                // Force container visibility with critical CSS
+                cartContainer.setAttribute('style', FORCE_SHOW_STYLE);
+                
+                // Get cart data directly from localStorage
+                const cartRaw = localStorage.getItem('cart');
+                console.log('Raw cart data:', cartRaw);
+                
+                // Parse cart or use empty array if no cart exists
+                const cart = cartRaw ? JSON.parse(cartRaw) : [];
+                console.log('Parsed cart data:', cart);
+                
+                // Get elements for totals
+                const cartSubtotalEl = document.getElementById('cart-subtotal');
+                const cartTotalEl = document.getElementById('cart-total');
+                const discountAmountEl = document.getElementById('discount-amount');
+                
+                // Clear existing content
+                cartContainer.innerHTML = '';
+                
+                // Handle empty cart case
+                if (!cart || !Array.isArray(cart) || cart.length === 0) {
+                    console.log('Cart is empty, showing empty cart message');
+                    cartContainer.innerHTML = `
+                        <div class="cart-empty-placeholder">
+                            <i class="fas fa-shopping-cart"></i>
+                            <p>Your cart is currently empty.</p>
+                            <a href="products.html" class="btn">Continue Shopping</a>
+                        </div>
+                    `;
                     
-                    console.log('Applied Netlify-specific styles to cart container');
+                    // Update totals to zero
+                    if (cartSubtotalEl) cartSubtotalEl.textContent = 'Rs 0.00';
+                    if (cartTotalEl) cartTotalEl.textContent = 'Rs 0.00';
+                    if (discountAmountEl) discountAmountEl.textContent = 'Rs 0.00';
                     
-                    // Force cart to display
-                    if (typeof displayCart === 'function') {
-                        displayCart();
-                        console.log('Forced cart display for Netlify');
+                    // Hide checkout button
+                    const checkoutBtn = document.querySelector('.checkout-btn');
+                    if (checkoutBtn) checkoutBtn.style.display = 'none';
+                    
+                    return;
+                }
+                
+                // Show checkout button when items exist
+                const checkoutBtn = document.querySelector('.checkout-btn');
+                if (checkoutBtn) checkoutBtn.style.display = 'block';
+                
+                // Calculate order total
+                let total = 0;
+                
+                // Create and append cart items
+                cart.forEach(item => {
+                    // Skip invalid items
+                    if (!item || !item.id) {
+                        console.warn('Invalid cart item:', item);
+                        return;
                     }
                     
-                    // Ensure cart is not empty
-                    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-                    if (cart.length === 0) {
-                        cartItems.innerHTML = `
-                            <div class="cart-empty-placeholder">
-                                <i class="fas fa-shopping-cart"></i>
-                                <p>Your cart is currently empty.</p>
-                                <a href="products.html" class="btn">Continue Shopping</a>
+                    // Calculate item total
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    
+                    // Create cart item element
+                    const cartItemDiv = document.createElement('div');
+                    cartItemDiv.className = 'cart-item';
+                    
+                    // Apply critical CSS for guaranteed visibility
+                    cartItemDiv.setAttribute('style', 
+                        'display: grid !important; grid-template-columns: 100px 1fr auto !important; gap: 25px !important; padding: 20px !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 5 !important; background: white !important; border-radius: 8px !important; margin-bottom: 10px !important; box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;');
+                    
+                    // Generate item HTML
+                    cartItemDiv.innerHTML = `
+                        <div class="cart-item-image">
+                            <img src="${item.image || ''}" alt="${item.name || 'Product'}" 
+                                 onerror="this.src='https://via.placeholder.com/300x300?text=Earrings';">
+                        </div>
+                        <div class="cart-item-details">
+                            <h3>${item.name || 'Product'}</h3>
+                            <p class="price">Rs ${(item.price || 0).toFixed(2)}</p>
+                            <div class="quantity-control">
+                                <button class="quantity-btn minus" data-id="${item.id}" style="min-height:44px; min-width:44px;">-</button>
+                                <input type="number" value="${item.quantity || 1}" min="1" class="quantity-input" data-id="${item.id}">
+                                <button class="quantity-btn plus" data-id="${item.id}" style="min-height:44px; min-width:44px;">+</button>
                             </div>
-                        `;
-                    }
-                }
-                
-                // Check if mobile and add specific mobile overrides
-                if (window.innerWidth < 768) {
-                    document.querySelectorAll('.cart-item').forEach(item => {
-                        item.setAttribute('style', 
-                            'display: grid !important; visibility: visible !important; opacity: 1 !important;');
-                    });
+                            <button class="remove-item" data-id="${item.id}" style="min-height:44px;">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        </div>
+                        <div class="cart-item-price">
+                            <p class="item-total">Rs ${itemTotal.toFixed(2)}</p>
+                        </div>
+                    `;
                     
-                    // Make buttons more tappable
-                    document.querySelectorAll('.quantity-btn, .remove-item').forEach(btn => {
-                        btn.style.minHeight = '44px';
-                        btn.style.minWidth = '44px';
-                    });
-                }
-            }, 500);
+                    // Append to container
+                    cartContainer.appendChild(cartItemDiv);
+                    
+                    // Apply mobile-specific styles if needed
+                    if (window.innerWidth < 768) {
+                        if (window.innerWidth < 480) {
+                            // Extremely small screens
+                            cartItemDiv.setAttribute('style', 
+                                'display: grid !important; grid-template-columns: 1fr !important; gap: 15px !important; padding: 15px !important; text-align: center !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 5 !important; background: white !important; border-radius: 8px !important; margin-bottom: 10px !important; box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;');
+                        } else {
+                            // Regular mobile screens
+                            cartItemDiv.setAttribute('style', 
+                                'display: grid !important; grid-template-columns: 80px 1fr !important; gap: 15px !important; padding: 15px !important; visibility: visible !important; opacity: 1 !important; position: relative !important; z-index: 5 !important; background: white !important; border-radius: 8px !important; margin-bottom: 10px !important; box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;');
+                        }
+                    }
+                });
+                
+                // Update order totals
+                if (cartSubtotalEl) cartSubtotalEl.textContent = `Rs ${total.toFixed(2)}`;
+                if (cartTotalEl) cartTotalEl.textContent = `Rs ${total.toFixed(2)}`;
+                if (discountAmountEl) discountAmountEl.textContent = 'Rs 0.00';
+                
+                // Set up event listeners for cart items
+                setupCartControls();
+            }
             
-            // More reliable click handlers for cart controls
-            document.body.addEventListener('click', function(e) {
-                // Improved handling for cart controls with proper event delegation
+            // Cart controls setup - completely self-contained
+            function setupCartControls() {
+                // Plus buttons
+                document.querySelectorAll('.plus').forEach(btn => {
+                    btn.onclick = function() {
+                        updateQuantity(parseInt(this.getAttribute('data-id')), 1);
+                    };
+                });
                 
-                // Plus button
-                if (e.target.classList.contains('plus') || e.target.closest('.plus')) {
-                    const button = e.target.classList.contains('plus') ? e.target : e.target.closest('.plus');
-                    const id = parseInt(button.getAttribute('data-id'));
-                    console.log('Plus button clicked via improved handler for ID:', id);
+                // Minus buttons
+                document.querySelectorAll('.minus').forEach(btn => {
+                    btn.onclick = function() {
+                        updateQuantity(parseInt(this.getAttribute('data-id')), -1);
+                    };
+                });
+                
+                // Remove buttons
+                document.querySelectorAll('.remove-item').forEach(btn => {
+                    btn.onclick = function() {
+                        removeItem(parseInt(this.getAttribute('data-id')));
+                    };
+                });
+                
+                // Quantity inputs
+                document.querySelectorAll('.quantity-input').forEach(input => {
+                    input.onchange = function() {
+                        const id = parseInt(this.getAttribute('data-id'));
+                        const newValue = parseInt(this.value);
+                        
+                        if (!isNaN(newValue) && newValue > 0) {
+                            setQuantity(id, newValue);
+                        }
+                    };
+                });
+                
+                // Set up promo code functionality
+                const applyPromoBtn = document.getElementById('apply-promo');
+                if (applyPromoBtn) {
+                    // Remove any existing listeners
+                    const newBtn = applyPromoBtn.cloneNode(true);
+                    applyPromoBtn.parentNode.replaceChild(newBtn, applyPromoBtn);
                     
-                    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-                    const item = cart.find(item => item.id === id);
-                    
-                    if (item) {
-                        item.quantity += 1;
+                    newBtn.addEventListener('click', function() {
+                        const promoInput = document.getElementById('promo-code');
+                        const discountAmount = document.getElementById('discount-amount');
+                        const cartTotal = document.getElementById('cart-total');
+                        const cartSubtotal = document.getElementById('cart-subtotal');
+                        
+                        if (promoInput && promoInput.value.trim() !== '') {
+                            const subtotalText = cartSubtotal.textContent;
+                            const subtotal = parseFloat(subtotalText.replace('Rs ', ''));
+                            
+                            if (promoInput.value.trim().toUpperCase() === 'YASH10') {
+                                const discount = subtotal * 0.1;
+                                discountAmount.textContent = `Rs ${discount.toFixed(2)}`;
+                                cartTotal.textContent = `Rs ${(subtotal - discount).toFixed(2)}`;
+                                alert('Promo code applied successfully!');
+                            } else {
+                                alert('Invalid promo code');
+                            }
+                        } else {
+                            alert('Please enter a promo code');
+                        }
+                    });
+                }
+            }
+            
+            // Helper function to update quantity
+            function updateQuantity(id, change) {
+                console.log(`Updating quantity for item ${id} by ${change}`);
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const item = cart.find(item => item.id === id);
+                
+                if (item) {
+                    const newQuantity = item.quantity + change;
+                    if (newQuantity <= 0) {
+                        removeItem(id);
+                    } else {
+                        item.quantity = newQuantity;
                         localStorage.setItem('cart', JSON.stringify(cart));
-                        
-                        // Force refresh cart display
-                        setTimeout(function() {
-                            if (typeof displayCart === 'function') {
-                                displayCart();
-                            } else {
-                                window.location.reload();
-                            }
-                        }, 100);
+                        updateCartIcon();
+                        renderCart();
                     }
                 }
+            }
+            
+            // Helper function to set specific quantity
+            function setQuantity(id, quantity) {
+                console.log(`Setting quantity for item ${id} to ${quantity}`);
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const item = cart.find(item => item.id === id);
                 
-                // Minus button
-                if (e.target.classList.contains('minus') || e.target.closest('.minus')) {
-                    const button = e.target.classList.contains('minus') ? e.target : e.target.closest('.minus');
-                    const id = parseInt(button.getAttribute('data-id'));
-                    console.log('Minus button clicked via improved handler for ID:', id);
-                    
+                if (item) {
+                    item.quantity = quantity;
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCartIcon();
+                    renderCart();
+                }
+            }
+            
+            // Helper function to remove item
+            function removeItem(id) {
+                console.log(`Removing item ${id} from cart`);
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const newCart = cart.filter(item => item.id !== id);
+                localStorage.setItem('cart', JSON.stringify(newCart));
+                updateCartIcon();
+                renderCart();
+            }
+            
+            // Update cart icon count
+            function updateCartIcon() {
+                const cartCount = document.getElementById('cart-count');
+                if (cartCount) {
                     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-                    const item = cart.find(item => item.id === id);
-                    
-                    if (item) {
-                        if (item.quantity > 1) {
-                            item.quantity -= 1;
-                            localStorage.setItem('cart', JSON.stringify(cart));
-                        } else {
-                            // Remove item if quantity would be less than 1
-                            const newCart = cart.filter(cartItem => cartItem.id !== id);
-                            localStorage.setItem('cart', JSON.stringify(newCart));
-                        }
-                        
-                        // Force refresh cart display
-                        setTimeout(function() {
-                            if (typeof displayCart === 'function') {
-                                displayCart();
-                            } else {
-                                window.location.reload();
-                            }
-                        }, 100);
-                    }
+                    const count = cart.reduce((total, item) => total + item.quantity, 0);
+                    cartCount.textContent = count.toString();
+                    // Add visual feedback
+                    cartCount.classList.add('updating');
+                    setTimeout(() => cartCount.classList.remove('updating'), 300);
+                }
+            }
+            
+            // Run cart renderer multiple times to ensure display
+            renderCart();
+            setTimeout(renderCart, 300);
+            setTimeout(renderCart, 1000);
+            
+            // Add global event delegation for cart buttons
+            document.body.addEventListener('click', function(e) {
+                // Find closest button if clicked on child element
+                const button = e.target.closest('button');
+                if (!button) return;
+                
+                // Handle plus buttons
+                if (button.classList.contains('plus')) {
+                    const id = parseInt(button.getAttribute('data-id'));
+                    if (!isNaN(id)) updateQuantity(id, 1);
                 }
                 
-                // Remove button
-                if (e.target.classList.contains('remove-item') || e.target.closest('.remove-item')) {
-                    const button = e.target.classList.contains('remove-item') ? e.target : e.target.closest('.remove-item');
+                // Handle minus buttons
+                if (button.classList.contains('minus')) {
                     const id = parseInt(button.getAttribute('data-id'));
-                    console.log('Remove button clicked via improved handler for ID:', id);
-                    
-                    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-                    const newCart = cart.filter(item => item.id !== id);
-                    localStorage.setItem('cart', JSON.stringify(newCart));
-                    
-                    // Force refresh cart display
-                    setTimeout(function() {
-                        if (typeof displayCart === 'function') {
-                            displayCart();
-                        } else {
-                            window.location.reload();
-                        }
-                    }, 100);
+                    if (!isNaN(id)) updateQuantity(id, -1);
+                }
+                
+                // Handle remove buttons
+                if (button.classList.contains('remove-item')) {
+                    const id = parseInt(button.getAttribute('data-id'));
+                    if (!isNaN(id)) removeItem(id);
                 }
             });
+            
+            // Initialize cart count
+            updateCartIcon();
         });
     </script>
 </body>
