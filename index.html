@@ -7,6 +7,11 @@
     <meta name="keywords" content="earrings, jewelry, handcrafted earrings, gold earrings, silver earrings, fashion accessories">
     <meta name="author" content="CloudNextra Solution">
     
+    <!-- Force browser to get latest version -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="YashStore - Exquisite Earrings Collection">
@@ -146,7 +151,7 @@
     <footer>
         <div class="container">
             <div class="copyright">
-                <p>&copy; 2025 YashStore. All rights reserved. Powered by <a href="https://github.com/GihanPasidu" target="_blank">CloudNextra Solution</a>.</p>
+                <p>&copy; 2023 YashStore. All rights reserved. Powered by <a href="https://github.com/GihanPasidu" target="_blank">CloudNextra Solution</a>.</p>
             </div>
         </div>
     </footer>
@@ -310,6 +315,17 @@
                 });
             });
             lazyImages.forEach(img => imageObserver.observe(img));
+        }
+    </script>
+    
+    <script>
+        // Register service worker for better cache control
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed:', err));
+            });
         }
     </script>
 </body>

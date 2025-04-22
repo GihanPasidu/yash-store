@@ -1,5 +1,6 @@
-/* /index.html 200
-/products/* /products.html 200
-/product-details/* /product-details.html 200
-/cart/* /cart.html 200
-/checkout/* /checkout.html 200
+# Ensure SPA routing works correctly and prevent caching issues
+/* /index.html 200!
+/products/* /products.html 200!
+/product-details/* /product-details.html 200!
+/cart/* /cart.html 200!
+/checkout/* /checkout.html 200!

@@ -1,6 +1,42 @@
 // YashStore - Main JavaScript
 // Copyright © 2023 CloudNextra Solution
 
+// App version for cache busting
+const APP_VERSION = '1.0.1'; // Increment this when you deploy updates
+
+// Check if we need to clear cache (version mismatch)
+function checkForUpdates() {
+    const storedVersion = localStorage.getItem('app_version');
+    if (storedVersion !== APP_VERSION) {
+        console.log(`New version detected: ${APP_VERSION} (was: ${storedVersion}). Clearing cache...`);
+        
+        // Clear only our cache items but keep cart
+        const cartData = localStorage.getItem('cart');
+        
+        // Function to reload with cache clearing
+        const reloadPage = () => {
+            localStorage.clear();
+            if (cartData) localStorage.setItem('cart', cartData);
+            localStorage.setItem('app_version', APP_VERSION);
+            
+            // Force reload from server, not cache
+            window.location.reload(true);
+        };
+        
+        // Reload immediately if first visit in session
+        if (!sessionStorage.getItem('page_loaded')) {
+            sessionStorage.setItem('page_loaded', 'true');
+            reloadPage();
+        } else {
+            // Store new version without forcing reload mid-session
+            localStorage.setItem('app_version', APP_VERSION);
+        }
+    }
+}
+
+// Run version check early
+checkForUpdates();
+
 // Cart functionality
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
@@ -709,8 +745,8 @@ function initializeCheckout() {
         // Encode the message for URL
         const encodedMessage = encodeURIComponent(message);
         
-        // WhatsApp API URL with your number
-        const whatsappURL = `https://wa.me/94767219661?text=${encodedMessage}`;
+        // WhatsApp API URL with the correct number 94771482950
+        const whatsappURL = `https://wa.me/94771482950?text=${encodedMessage}`;
         
         // Clear cart
         localStorage.removeItem('cart');

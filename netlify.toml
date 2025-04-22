@@ -1,13 +1,20 @@
 [build]
   publish = "/"
+  command = ""
+
+# Force cache clearing with each deployment
+[build.environment]
+  NETLIFY_USE_YARN = "false"
+  NETLIFY_CACHE_BUST = "true"
 
 # Redirect all routes to index.html for SPA routing
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  
-# Add headers for security and caching
+  force = true
+
+# Add headers for security and proper caching control
 [[headers]]
   for = "/*"
   [headers.values]
@@ -16,24 +23,26 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Content-Security-Policy = "default-src 'self' https:; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' https:; connect-src 'self' https:;"
+    # Prevent aggressive caching to ensure updates are reflected
+    Cache-Control = "public, max-age=0, must-revalidate"
     
-# Cache assets for better performance
+# Cache assets for better performance but with proper validation
 [[headers]]
   for = "/css/*"
   [headers.values]
-    Cache-Control = "public, max-age=604800"
+    Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
   for = "/js/*"
   [headers.values]
-    Cache-Control = "public, max-age=604800"
+    Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
   for = "/*.jpg"
   [headers.values]
-    Cache-Control = "public, max-age=604800"
+    Cache-Control = "public, max-age=31536000, immutable"
 
 [[headers]]
   for = "/*.png"
   [headers.values]
-    Cache-Control = "public, max-age=604800"
+    Cache-Control = "public, max-age=31536000, immutable"
