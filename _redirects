@@ -1,6 +1,11 @@
-# Ensure SPA routing works correctly and prevent caching issues
-/* /index.html 200!
-/products/* /products.html 200!
-/product-details/* /product-details.html 200!
-/cart/* /cart.html 200!
-/checkout/* /checkout.html 200!
+# Redirect page paths to HTML files
+/products     /products.html     200
+/product-details  /product-details.html  200
+/cart         /cart.html         200
+/checkout     /checkout.html     200
+
+# Handle product detail pages with IDs
+/product-details/*  /product-details.html?id=:splat  200
+
+# This needs to be last - SPA fallback
+/*    /index.html   200

@@ -852,7 +852,7 @@ function updateCartForNetlify() {
             if (!cartContainer) return;
             
             // Force the container to display
-            cartContainer.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; height: auto !important;';
+            cartContainer.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; height: auto !important; overflow: visible !important; z-index: 9999 !important;';
             
             // Check if cart items are showing
             if (cartContainer.querySelectorAll('.cart-item').length === 0 && cart.length > 0) {
@@ -866,7 +866,7 @@ function updateCartForNetlify() {
                     const itemTotal = item.price * item.quantity;
                     
                     const cartItemHTML = `
-                        <div class="cart-item" style="display: grid !important; visibility: visible !important; opacity: 1 !important;">
+                        <div class="cart-item" style="display: grid !important; visibility: visible !important; opacity: 1 !important; z-index: 999 !important;">
                             <div class="cart-item-image">
                                 <img src="${item.image}" alt="${item.name}" 
                                      onerror="this.src='https://via.placeholder.com/300x300?text=Earrings';">

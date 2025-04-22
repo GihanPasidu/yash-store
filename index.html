@@ -323,10 +323,32 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
-                    .then(reg => console.log('Service Worker registered'))
-                    .catch(err => console.log('Service Worker registration failed:', err));
+                    .then(reg => {
+                        console.log('Service Worker registered successfully');
+                        // Force update if needed
+                        reg.update();
+                    })
+                    .catch(err => console.error('Service Worker registration failed:', err));
             });
         }
+        
+        // Fix navigation on Netlify
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fix all navigation links to work properly on Netlify
+            document.querySelectorAll('a').forEach(link => {
+                if (link.href.includes(window.location.origin)) {
+                    link.addEventListener('click', function(e) {
+                        const href = this.getAttribute('href');
+                        // Convert .html extensions to clean URLs for better SEO
+                        if (href && href.endsWith('.html')) {
+                            e.preventDefault();
+                            const newPath = href.replace('.html', '');
+                            window.location.href = newPath;
+                        }
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>

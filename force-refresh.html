@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YashStore - Force Refresh</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f7f7f7;
+            text-align: center;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #e74c3c;
+        }
+        .btn {
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background-color: #c0392b;
+        }
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #e74c3c;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #status {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>YashStore - Force Refresh</h1>
+        <p>If you're experiencing issues with the website, use this page to clear your cache and refresh all site data.</p>
+        
+        <div id="refreshContainer">
+            <button id="refreshBtn" class="btn">Refresh Website</button>
+        </div>
+        
+        <div id="loadingContainer" style="display:none;">
+            <div class="spinner"></div>
+            <div id="status">Clearing cache...</div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            // Show loading indicator
+            document.getElementById('refreshContainer').style.display = 'none';
+            document.getElementById('loadingContainer').style.display = 'block';
+            document.getElementById('status').textContent = 'Clearing cache...';
+            
+            // Clear all caches
+            if ('caches' in window) {
+                caches.keys().then(function(cacheNames) {
+                    return Promise.all(
+                        cacheNames.map(function(cacheName) {
+                            document.getElementById('status').textContent = 'Clearing cache: ' + cacheName;
+                            return caches.delete(cacheName);
+                        })
+                    );
+                }).then(function() {
+                    document.getElementById('status').textContent = 'Clearing localStorage...';
+                    // Clear localStorage except for cart
+                    const cartData = localStorage.getItem('cart');
+                    localStorage.clear();
+                    if (cartData) localStorage.setItem('cart', cartData);
+                    
+                    document.getElementById('status').textContent = 'Clearing sessionStorage...';
+                    // Clear sessionStorage
+                    sessionStorage.clear();
+                    
+                    document.getElementById('status').textContent = 'Unregistering service worker...';
+                    // Unregister service worker
+                    if ('serviceWorker' in navigator) {
+                        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                            for (let registration of registrations) {
+                                registration.unregister();
+                            }
+                        });
+                    }
+                    
+                    // Redirect after a short delay
+                    document.getElementById('status').textContent = 'Reloading page...';
+                    setTimeout(function() {
+                        window.location.href = '/?forceRefresh=' + Date.now();
+                    }, 1000);
+                });
+            } else {
+                // Fallback for browsers without cache API
+                document.getElementById('status').textContent = 'Clearing stored data...';
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                setTimeout(function() {
+                    window.location.href = '/?forceRefresh=' + Date.now();
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -7,12 +7,39 @@
   NETLIFY_USE_YARN = "false"
   NETLIFY_CACHE_BUST = "true"
 
-# Redirect all routes to index.html for SPA routing
+# Redirect all page URLs to the appropriate HTML files
+[[redirects]]
+  from = "/products"
+  to = "/products.html"
+  status = 200
+
+[[redirects]]
+  from = "/product-details"
+  to = "/product-details.html"
+  status = 200
+
+[[redirects]]
+  from = "/cart"
+  to = "/cart.html"
+  status = 200
+
+[[redirects]]
+  from = "/checkout"
+  to = "/checkout.html"
+  status = 200
+
+# Handle product detail pages with IDs
+[[redirects]]
+  from = "/product-details/*"
+  to = "/product-details.html?id=:splat"
+  status = 200
+
+# This needs to be last - fallback for SPA behavior
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  force = true
+  force = false
 
 # Add headers for security and proper caching control
 [[headers]]
@@ -22,10 +49,8 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Content-Security-Policy = "default-src 'self' https:; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' https:; connect-src 'self' https:;"
-    # Prevent aggressive caching to ensure updates are reflected
-    Cache-Control = "public, max-age=0, must-revalidate"
-    
+    Cache-Control = "no-cache, max-age=0, must-revalidate"
+
 # Cache assets for better performance but with proper validation
 [[headers]]
   for = "/css/*"
