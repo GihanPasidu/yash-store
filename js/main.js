@@ -490,7 +490,7 @@ function initializeProductPage() {
     }
 }
 
-// Display products on products page
+// Display products on products page - optimized for performance
 function displayProducts(filteredProducts = null) {
     const productsGrid = document.getElementById('products-grid');
     
@@ -499,16 +499,13 @@ function displayProducts(filteredProducts = null) {
         return;
     }
     
-    // Debug info for Netlify deployment
-    console.log(`Attempting to display products. Current window.products:`, window.products);
-    
     // Check if products have already been rendered to prevent duplicates
     if (productsGrid.querySelectorAll('.product-card').length > 0) {
         console.log('Products already rendered, skipping to prevent duplicates');
         return;
     }
     
-    // Handle case where window.products might not be loaded yet on Netlify
+    // Handle case where window.products might not be loaded yet
     if (!window.products || !Array.isArray(window.products)) {
         console.warn('Products data not available. Attempting to reload from source');
         
@@ -537,9 +534,6 @@ function displayProducts(filteredProducts = null) {
     // Use window.products (the global object) when no filtered products
     const productsToDisplay = filteredProducts || window.products;
     
-    // Debug info for Netlify deployment
-    console.log(`Displaying ${productsToDisplay.length} products`);
-    
     if (productsToDisplay.length === 0) {
         productsGrid.innerHTML = `
             <div class="no-products">
@@ -552,16 +546,29 @@ function displayProducts(filteredProducts = null) {
     // Clear existing content
     productsGrid.innerHTML = '';
     
-    // Set a flag in the DOM to indicate we're actively rendering products
-    productsGrid.setAttribute('data-rendering', 'true');
-    
-    // Add products with a slight delay between each to prevent Netlify rendering issues
-    let delay = 0;
-    const delayIncrement = 50; // ms between each product render
-    
-    // Create a document fragment to improve performance
+    // Create a document fragment for batch DOM updates - major performance improvement
     const fragment = document.createDocumentFragment();
     
+    // Use template literal once with placeholders and replace values
+    // This is much faster than creating multiple template literals
+    const productTemplate = `
+        <div class="product-card" data-product-id="PRODUCT_ID">
+            <div class="product-image loading">
+                <img src="PRODUCT_IMAGE" alt="PRODUCT_NAME" loading="lazy" 
+                     onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
+                <div class="product-overlay">
+                    <button class="add-to-cart" data-id="PRODUCT_ID">Add to Cart</button>
+                    <button class="view-details" data-id="PRODUCT_ID">View Details</button>
+                </div>
+            </div>
+            <div class="product-info">
+                <h3>PRODUCT_NAME</h3>
+                <p class="price">Rs PRODUCT_PRICE</p>
+            </div>
+        </div>
+    `;
+    
+    // Process all products at once instead of with setTimeout delays
     productsToDisplay.forEach(product => {
         // Verify each product has required properties
         if (!product || !product.id || !product.name || !product.price) {
@@ -569,99 +576,43 @@ function displayProducts(filteredProducts = null) {
             return;
         }
         
-        setTimeout(() => {
-            const productCard = document.createElement('div');
-            productCard.className = 'product-card';
-            productCard.setAttribute('data-product-id', product.id);
-            
-            // Ensure image path works on both local and Netlify
-            const imageSrc = product.image || '';
-            
-            productCard.innerHTML = `
-                <div class="product-image loading">
-                    <img src="${imageSrc}" alt="${product.name}" 
-                         onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
-                    <div class="product-overlay">
-                        <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
-                        <button class="view-details" data-id="${product.id}">View Details</button>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <h3>${product.name}</h3>
-                    <p class="price">Rs ${product.price.toFixed(2)}</p>
-                </div>
-            `;
-            
-            const img = productCard.querySelector('img');
-            handleImageLoad(img);
-            
-            fragment.appendChild(productCard);
-            
-            // Add event listeners to this specific product card
-            const addToCartBtn = productCard.querySelector('.add-to-cart');
-            if (addToCartBtn) {
-                addToCartBtn.addEventListener('click', function() {
-                    const productId = parseInt(this.getAttribute('data-id'));
-                    addToCart(productId);
-                });
-            }
-            
-            const viewDetailsBtn = productCard.querySelector('.view-details');
-            if (viewDetailsBtn) {
-                viewDetailsBtn.addEventListener('click', function() {
-                    const productId = parseInt(this.getAttribute('data-id'));
-                    window.location.href = `product-details.html?id=${productId}`;
-                });
-            }
-            
-            // On the last item, append the fragment to the DOM and remove rendering flag
-            if (delay === (productsToDisplay.length - 1) * delayIncrement) {
-                setTimeout(() => {
-                    productsGrid.appendChild(fragment);
-                    productsGrid.removeAttribute('data-rendering');
-                    console.log('Products rendering completed, total products:', productsGrid.querySelectorAll('.product-card').length);
-                }, 100);
-            }
-        }, delay);
+        // Create a temporary element to hold the HTML
+        const tempDiv = document.createElement('div');
         
-        delay += delayIncrement;
+        // Replace placeholders with actual values - faster than dynamic template creation
+        let productHTML = productTemplate
+            .replace(/PRODUCT_ID/g, product.id)
+            .replace('PRODUCT_IMAGE', product.image || '')
+            .replace('PRODUCT_NAME', product.name)
+            .replace('PRODUCT_PRICE', product.price.toFixed(2));
+        
+        tempDiv.innerHTML = productHTML;
+        
+        // Get the product card element from the temporary div
+        const productCard = tempDiv.firstElementChild;
+        
+        // Set up event handlers
+        const addToCartBtn = productCard.querySelector('.add-to-cart');
+        if (addToCartBtn) {
+            addToCartBtn.addEventListener('click', function() {
+                addToCart(parseInt(this.getAttribute('data-id')));
+            });
+        }
+        
+        const viewDetailsBtn = productCard.querySelector('.view-details');
+        if (viewDetailsBtn) {
+            viewDetailsBtn.addEventListener('click', function() {
+                window.location.href = `product-details.html?id=${this.getAttribute('data-id')}`;
+            });
+        }
+        
+        // Add to document fragment
+        fragment.appendChild(productCard);
     });
     
-    // After all products have been added, add a global event listener to catch any buttons
-    // that might not have individual listeners
-    setTimeout(() => {
-        document.querySelectorAll('.add-to-cart').forEach(button => {
-            button.addEventListener('click', function() {
-                const productId = parseInt(this.getAttribute('data-id'));
-                addToCart(productId);
-            });
-        });
-        
-        document.querySelectorAll('.view-details').forEach(button => {
-            button.addEventListener('click', function() {
-                const productId = parseInt(this.getAttribute('data-id'));
-                window.location.href = `product-details.html?id=${productId}`;
-            });
-        });
-    }, delay + 100);
-}
-
-// Filter products by category
-function filterProducts(category) {
-    // Ensure we clear any rendering flags before filtering
-    const productsGrid = document.getElementById('products-grid');
-    if (productsGrid) {
-        productsGrid.removeAttribute('data-rendering');
-    }
-    
-    if (category === 'all') {
-        displayProducts();
-        return;
-    }
-    
-    // Filter the global products array
-    const filtered = window.products.filter(product => product.category === category);
-    displayProducts(filtered);
+    // Add all products to the DOM at once - much faster than individual appends
+    productsGrid.appendChild(fragment);
+    console.log('Products rendering completed');
 }
 
 // Enhanced notification system
@@ -696,19 +647,40 @@ document.querySelector('.mobile-menu-toggle')?.addEventListener('click', functio
     nav.classList.toggle('active');
 });
 
-// Add intersection observer for lazy loading
-const observeImages = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const img = entry.target;
-            img.src = img.dataset.src;
-            img.classList.add('loaded');
-            observeImages.unobserve(img);
-        }
-    });
-});
-
-document.querySelectorAll('img[data-src]').forEach(img => observeImages.observe(img));
+// Set up a more efficient image lazy loading
+function setupEfficientLazyLoading() {
+    // Use native lazy loading where supported
+    if ('loading' in HTMLImageElement.prototype) {
+        document.querySelectorAll('img:not([loading])').forEach(img => {
+            img.loading = 'lazy';
+        });
+    } else {
+        // Fallback with Intersection Observer
+        const lazyImages = document.querySelectorAll('img:not([loading="eager"])');
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    if (img.dataset.src) {
+                        img.src = img.dataset.src;
+                        img.removeAttribute('data-src');
+                    }
+                    img.classList.add('loaded');
+                    imageObserver.unobserve(img);
+                }
+            });
+        });
+        
+        lazyImages.forEach(img => {
+            // Store src in data-src and clear src for true lazy loading
+            if (!img.dataset.src && img.src && !img.src.includes('data:image')) {
+                img.dataset.src = img.src;
+                img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"%3E%3C/svg%3E';
+                imageObserver.observe(img);
+            }
+        });
+    }
+}
 
 // Initialize checkout
 function initializeCheckout() {
@@ -909,110 +881,32 @@ function updateCartForNetlify() {
     }
 }
 
-// Document ready functions
+// Optimize the document ready handler to be more efficient
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if products have been loaded
-    if (!window.products) {
-        console.error('Products data not loaded. Make sure products-data.js is included before main.js');
-        
-        // Try to reload the products data
-        const script = document.createElement('script');
-        script.src = 'js/products-data.js';
-        script.onload = function() {
-            console.log('Products data loaded dynamically');
-            // Initialize after loading
-            updateCartCount();
-            initializePageFunctions();
-        };
-        document.head.appendChild(script);
-    } else {
-        // Products already loaded, proceed normally
-        updateCartCount();
-        initializePageFunctions();
-    }
-    
-    // Update cart count immediately on page load
+    // Immediate tasks that must happen right away
     updateCartCount();
     
-    // Set up a recurring check to ensure cart count is always correct
-    setInterval(updateCartCount, 2000);
-    
-    // Listen for storage events (when cart is updated in another tab)
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'cart') {
-            console.log('Cart data changed in another tab');
-            updateCartCount();
-        }
-    });
-    
-    // Add global click handler to ensure add to cart works even if specific handlers fail
-    document.body.addEventListener('click', function(e) {
-        // Check if the clicked element is an add-to-cart button or inside one
-        if (e.target.classList.contains('add-to-cart') || 
-            e.target.closest('.add-to-cart') || 
-            e.target.id === 'add-to-cart-btn' || 
-            e.target.closest('#add-to-cart-btn')) {
-            
-            const button = e.target.classList.contains('add-to-cart') || e.target.id === 'add-to-cart-btn' 
-                ? e.target 
-                : e.target.closest('.add-to-cart') || e.target.closest('#add-to-cart-btn');
-            
-            const id = parseInt(button.getAttribute('data-id'));
-            console.log('Add to cart button clicked via global delegation for ID:', id);
-            
-            if (id && !isNaN(id)) {
-                addToCart(id);
-                // Prevent event from propagating further
-                e.preventDefault();
-                e.stopPropagation();
-            }
+    // Defer less critical tasks to allow page to render first
+    setTimeout(() => {
+        // Check if products have been loaded
+        if (!window.products) {
+            // Dynamically load products without blocking render
+            const script = document.createElement('script');
+            script.src = 'js/products-data.js';
+            script.onload = initializePageFunctions;
+            document.head.appendChild(script);
+        } else {
+            initializePageFunctions();
         }
         
-        // Handle plus button clicks with event delegation
-        if (e.target.classList.contains('plus') || e.target.closest('.plus')) {
-            const button = e.target.classList.contains('plus') ? e.target : e.target.closest('.plus');
-            const id = parseInt(button.getAttribute('data-id'));
-            console.log('Plus button clicked via delegation for ID:', id);
-            
-            const item = cart.find(item => item.id === id);
-            if (item) {
-                updateQuantity(id, item.quantity + 1);
-                // Force reload for Netlify if needed
-                if (getCurrentPage() === 'cart') {
-                    setTimeout(displayCart, 50);
-                }
-            }
-        }
+        // Set up improved lazy loading
+        setupEfficientLazyLoading();
         
-        // Handle minus button clicks with event delegation
-        if (e.target.classList.contains('minus') || e.target.closest('.minus')) {
-            const button = e.target.classList.contains('minus') ? e.target : e.target.closest('.minus');
-            const id = parseInt(button.getAttribute('data-id'));
-            console.log('Minus button clicked via delegation for ID:', id);
-            
-            const item = cart.find(item => item.id === id);
-            if (item) {
-                updateQuantity(id, item.quantity - 1);
-                // Force reload for Netlify if needed
-                if (getCurrentPage() === 'cart') {
-                    setTimeout(displayCart, 50);
-                }
-            }
-        }
-        
-        // Handle remove button clicks with event delegation
-        if (e.target.classList.contains('remove-item') || e.target.closest('.remove-item')) {
-            const button = e.target.classList.contains('remove-item') ? e.target : e.target.closest('.remove-item');
-            const id = parseInt(button.getAttribute('data-id'));
-            console.log('Remove button clicked via delegation for ID:', id);
-            
-            removeFromCart(id);
-            // Force reload for Netlify if needed
-            if (getCurrentPage() === 'cart') {
-                setTimeout(displayCart, 50);
-            }
-        }
-    });
+        // Set up storage event listener
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'cart') updateCartCount();
+        });
+    }, 100);
 });
 
 // Separate function to initialize page-specific functions
@@ -1064,23 +958,6 @@ function initializePageFunctions() {
         console.log('Initializing products page');
         // Only try to display products once to prevent duplicates
         displayProducts();
-        
-        // Set up category filter event listeners
-        document.querySelectorAll('.category-filter').forEach(button => {
-            button.addEventListener('click', function() {
-                // Remove active class from all buttons
-                document.querySelectorAll('.category-filter').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                
-                // Add active class to clicked button
-                this.classList.add('active');
-                
-                // Get category and filter products
-                const category = this.getAttribute('data-category');
-                filterProducts(category);
-            });
-        });
     }
     
     if (currentPage.includes('product-details.html')) {
@@ -1180,5 +1057,5 @@ function initializePageFunctions() {
             }
         }
     });
-};
+}
 

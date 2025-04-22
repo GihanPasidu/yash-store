@@ -19,12 +19,42 @@
     <meta name="twitter:description" content="Discover our handcrafted collection that adds sparkle to your style">
     
     <title>YashStore - Exquisite Earrings Collection</title>
+    
+    <!-- Resource hints for faster loading -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Critical CSS inline -->
+    <style>
+        /* Critical path CSS for faster rendering */
+        header {background-color:white; box-shadow:0 2px 10px rgba(0,0,0,0.1); position:sticky; top:0; z-index:1000;}
+        header .container {display:flex; justify-content:space-between; align-items:center; padding:15px;}
+        .container {width:90%; max-width:1200px; margin:0 auto; padding:0 15px;}
+        .logo h1 {color:#e74c3c; font-size:1.8rem; margin:0; letter-spacing:1px; text-transform:uppercase;}
+        #cart-count {position:absolute; top:-10px; right:-10px; background-color:#e74c3c; color:white; border-radius:50%; font-size:0.7rem; padding:2px 6px;}
+    </style>
+    
+    <!-- Load critical stylesheets first -->
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/pages/products.css">
-    <link rel="stylesheet" href="css/pages/product-details.css">
-    <link rel="stylesheet" href="css/pages/cart.css">
+    
+    <!-- Defer non-critical CSS -->
+    <link rel="stylesheet" href="css/pages/products.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="css/pages/product-details.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="css/pages/cart.css" media="print" onload="this.media='all'">
+    
+    <!-- Defer non-critical fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    
+    <!-- Fallback for browsers that don't support onload -->
+    <noscript>
+        <link rel="stylesheet" href="css/pages/products.css">
+        <link rel="stylesheet" href="css/pages/product-details.css">
+        <link rel="stylesheet" href="css/pages/cart.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    </noscript>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="images/favicon.png">
@@ -121,12 +151,20 @@
         </div>
     </footer>
     
-    <script src="js/products-data.js"></script>
-    <script src="js/main.js"></script>
+    <!-- Defer JavaScript loading -->
+    <script src="js/products-data.js" defer></script>
+    <script src="js/main.js" defer></script>
+    
     <script>
-        // Netlify-specific initialization
+        // Inline critical JavaScript for faster initialization
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Initializing index page for Netlify');
+            // Update cart count immediately 
+            const cartCount = document.getElementById('cart-count');
+            if (cartCount) {
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const count = cart.reduce((total, item) => total + item.quantity, 0);
+                cartCount.textContent = count.toString();
+            }
             
             // Load featured products from product data
             const loadFeaturedProducts = function() {
@@ -156,7 +194,7 @@
                     
                     productCard.innerHTML = `
                         <div class="product-image loading">
-                            <img src="${product.image}" alt="${product.name}" 
+                            <img src="${product.image}" alt="${product.name}" loading="lazy"
                                  onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
                             <div class="product-overlay">
                                 <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
@@ -246,6 +284,30 @@
                 }
             });
         });
+        
+        // Add lazy loading for images
+        if ('loading' in HTMLImageElement.prototype) {
+            // Browser supports native lazy loading
+            document.querySelectorAll('img').forEach(img => {
+                if (!img.loading) img.loading = 'lazy';
+            });
+        } else {
+            // Fallback lazy loading with Intersection Observer
+            const lazyImages = document.querySelectorAll('img:not([loading="eager"])');
+            const imageObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                        }
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+            lazyImages.forEach(img => imageObserver.observe(img));
+        }
     </script>
 </body>
 </html>
