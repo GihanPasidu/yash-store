@@ -1180,5 +1180,5 @@ function initializePageFunctions() {
             }
         }
     });
-});
-}
+};
+
