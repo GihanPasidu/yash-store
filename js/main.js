@@ -708,44 +708,22 @@ function initializeCheckout() {
 
 // Display checkout summary
 function displayCheckoutSummary() {
-    const checkoutItems = document.getElementById('checkout-items');
-    const checkoutSubtotal = document.getElementById('checkout-subtotal');
     const checkoutTotal = document.getElementById('checkout-total');
     
-    if (!checkoutItems || !checkoutTotal) return;
+    if (!checkoutTotal) return;
     
     if (cart.length === 0) {
         window.location.href = 'cart.html';
         return;
     }
     
-    checkoutItems.innerHTML = '';
     let total = 0;
     
     cart.forEach(item => {
         const itemTotal = item.price * item.quantity;
         total += itemTotal;
-        
-        const checkoutItem = document.createElement('div');
-        checkoutItem.className = 'checkout-item';
-        checkoutItem.innerHTML = `
-            <div class="checkout-item-image">
-                <img src="${item.image}" alt="${item.name}" 
-                     onerror="this.src='https://via.placeholder.com/60x60?text=Earrings'">
-            </div>
-            <div class="checkout-item-info">
-                <h3>${item.name}</h3>
-                <p class="qty">Qty: ${item.quantity}</p>
-            </div>
-            <div class="checkout-item-price">
-                Rs ${itemTotal.toFixed(2)}
-            </div>
-        `;
-        
-        checkoutItems.appendChild(checkoutItem);
     });
     
-    if (checkoutSubtotal) checkoutSubtotal.textContent = `Rs ${total.toFixed(2)}`;
     checkoutTotal.textContent = `Rs ${total.toFixed(2)}`;
 }
 
