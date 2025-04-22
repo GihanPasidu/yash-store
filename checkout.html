@@ -85,13 +85,51 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Initializing checkout page for Netlify');
             
-            // Force checkout summary to display correctly on Netlify
-            setTimeout(function() {
+            // Force checkout summary to display correctly on Netlify with multiple attempts
+            function initCheckoutSummary() {
+                console.log('Attempting to initialize checkout summary');
+                
+                // Make sure cart data exists
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                if (cart.length === 0) {
+                    console.log('Cart is empty, redirecting to products page');
+                    window.location.href = 'products.html';
+                    return;
+                }
+                
+                // Calculate and display total directly if function not available
+                const checkoutTotal = document.getElementById('checkout-total');
+                if (checkoutTotal) {
+                    try {
+                        let total = 0;
+                        cart.forEach(item => {
+                            const itemTotal = item.price * item.quantity;
+                            total += itemTotal;
+                        });
+                        checkoutTotal.textContent = `Rs ${total.toFixed(2)}`;
+                        console.log('Total calculated directly:', total);
+                    } catch (err) {
+                        console.error('Error calculating total directly:', err);
+                    }
+                }
+                
+                // Also try the function approach
                 if (typeof displayCheckoutSummary === 'function') {
                     displayCheckoutSummary();
-                    console.log('Forced checkout summary display for Netlify');
+                    console.log('Called displayCheckoutSummary function');
+                } else {
+                    console.warn('displayCheckoutSummary function not found');
                 }
-            }, 300);
+            }
+            
+            // Try immediately
+            initCheckoutSummary();
+            
+            // And also with a delay to ensure DOM is fully loaded
+            setTimeout(initCheckoutSummary, 300);
+            
+            // And a final attempt with a longer delay
+            setTimeout(initCheckoutSummary, 1000);
             
             // Enable form submission with WhatsApp integration for Netlify
             const checkoutForm = document.getElementById('checkout-form');

@@ -708,23 +708,50 @@ function initializeCheckout() {
 
 // Display checkout summary
 function displayCheckoutSummary() {
+    console.log('Initializing checkout summary display');
     const checkoutTotal = document.getElementById('checkout-total');
     
-    if (!checkoutTotal) return;
-    
-    if (cart.length === 0) {
-        window.location.href = 'cart.html';
+    if (!checkoutTotal) {
+        console.error('Checkout total element not found');
         return;
     }
     
-    let total = 0;
-    
-    cart.forEach(item => {
-        const itemTotal = item.price * item.quantity;
-        total += itemTotal;
-    });
-    
-    checkoutTotal.textContent = `Rs ${total.toFixed(2)}`;
+    try {
+        // Get cart from localStorage
+        const cartData = localStorage.getItem('cart');
+        console.log('Cart data from localStorage:', cartData);
+        
+        if (!cartData) {
+            console.log('No cart data found, redirecting to cart page');
+            window.location.href = 'cart.html';
+            return;
+        }
+        
+        const cart = JSON.parse(cartData);
+        
+        if (!cart || !Array.isArray(cart) || cart.length === 0) {
+            console.log('Empty cart, redirecting to cart page');
+            window.location.href = 'cart.html';
+            return;
+        }
+        
+        let total = 0;
+        
+        cart.forEach(item => {
+            if (item && item.price && item.quantity) {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                console.log(`Item ${item.name}: ${item.quantity} x ${item.price} = ${itemTotal}`);
+            }
+        });
+        
+        console.log('Total calculated:', total);
+        checkoutTotal.textContent = `Rs ${total.toFixed(2)}`;
+        console.log('Checkout summary displayed successfully');
+    } catch (error) {
+        console.error('Error displaying checkout summary:', error);
+        checkoutTotal.textContent = 'Error calculating total';
+    }
 }
 
 // Improve page path detection for Netlify
