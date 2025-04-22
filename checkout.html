@@ -160,8 +160,25 @@
                     // Clear cart
                     localStorage.removeItem('cart');
                     
-                    // Redirect to WhatsApp
-                    window.location.href = whatsappURL;
+                    // Redirect to WhatsApp - FIXED: Open in new window and ensure proper launch
+                    // Show success message first
+                    alert("Thank you for your order! Redirecting you to WhatsApp to complete your order.");
+                    
+                    // Use window.open to ensure WhatsApp opens properly
+                    const whatsappWindow = window.open(whatsappURL, '_blank');
+                    
+                    // Fallback if window.open is blocked
+                    if (!whatsappWindow || whatsappWindow.closed || typeof whatsappWindow.closed === 'undefined') {
+                        // Direct location change as fallback
+                        window.location.href = whatsappURL;
+                        
+                        // Additional fallback message if needed
+                        setTimeout(() => {
+                            if (confirm("If WhatsApp didn't open automatically, click OK to try again.")) {
+                                window.location.href = whatsappURL;
+                            }
+                        }, 2000);
+                    }
                 });
             }
         });
