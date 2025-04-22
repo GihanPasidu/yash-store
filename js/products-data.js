@@ -5,7 +5,7 @@
 
 // Create a self-executing function to avoid global scope pollution
 (function() {
-    // Products data
+    // Products data - ensure all names are properly formatted
     const products = [
         {
             id: 1,
@@ -25,90 +25,90 @@
         },
         {
             id: 3,
-            name: "Flower Earrings(Red)",
+            name: "Flower Earrings (Red)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/a1/ec/cc/a1eccccc73eaa842fd6e862e262e09f9.jpg",
-            description: "Simple, modern Earrings with a minimalist design.",
+            description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
             category: "pearl"
         },
         {
             id: 4,
-            name: "Flower Earrings(Yellow)",
+            name: "Flower Earrings (Yellow)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/59/47/8b/59478b6df3a955adfb9a35bea8f354f9.jpg",
-            description: "Simple, modern Earrings with a minimalist design.",
+            description: "Vibrant yellow flower earrings with elegant details and comfortable fit.",
             category: "silver"
         },
         {
             id: 5,
-            name: "Flower Earrings(Blue)",
+            name: "Flower Earrings (Blue)",
             price: 50.00,
             image: "https://i.pinimg.com/474x/e6/53/6b/e6536b44c96b887dd3c42ec87ab50e43.jpg",
-            description: "Simple, modern Earrings with a minimalist design.",
+            description: "Stunning blue flower earrings with intricate design, perfect for special occasions.",
             category: "gold"
         },
         {
             id: 6,
-            name: "Flower Earrings(Pink)",
+            name: "Flower Earrings (Pink)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/c0/b0/d3/c0b0d36c63eac04c5c253be22d567ee5.jpg",
-            description: "Simple, modern Earrings with a minimalist design.",
+            description: "Lovely pink flower earrings with a delicate design that complements any outfit.",
             category: "gold"
         },
         {
             id: 7,
-            name: "Flower Earrings(light pink)",
+            name: "Flower Earrings (Light Pink)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/28/ee/90/28ee90ccb1a8b65d6f6af135e55f115e.jpg",
-            description: "Simple, modern Earrings with a minimalist design.",
+            description: "Subtle light pink flower earrings with elegant details for a soft feminine look.",
             category: "gemstone"
         },
         {
             id: 8,
-            name: "Flower Earrings|(Green)",
+            name: "Flower Earrings (Green)",
             price: 50.00,
             image: "https://i.pinimg.com/474x/bb/87/ef/bb87efe6698cc157724939dc94254348.jpg",
-            description: "Simple, modern Earrings with a minimalist design.",
+            description: "Charming green flower earrings with a fresh look, perfect for spring and summer.",
             category: "beaded"
         },
         {
             id: 9,
-            name: "Flower Earrings(purple)",
+            name: "Flower Earrings (Purple)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/e0/df/e5/e0dfe5d7bb26e3fd46da8d6307b35907.jpg",
-            description: "Simple, modern Earrings with a minimalist design.",
+            description: "Regal purple flower earrings with a sophisticated design for both casual and formal wear.",
             category: "beaded"
         },
         {
             id: 10,
-            name: "Flower Earrings(Brown)",
+            name: "Flower Earrings (Brown)",
             price: 50.00,
             image: "https://i.pinimg.com/474x/94/a6/99/94a699903cf4e8430bccbebc6f6289a2.jpg",
-            description: "Simple, modern Earrings with a minimalist design.",
+            description: "Elegant brown flower earrings with an earthy tone, perfectly complementing natural looks.",
             category: "beaded"
         },
         {
             id: 11,
-            name: "Flower Earrings(light Rose)",
+            name: "Flower Earrings (Light Rose)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/de/15/bc/de15bca12a10755b2e58f4ef307567b8.jpg",
-            description: "Simple, modern Earrings with a minimalist design.",
+            description: "Delicate light rose flower earrings with a romantic design for a feminine touch.",
             category: "beaded"
         },
         {
             id: 12,
-            name: "Flower Earrings(Rose)",
+            name: "Flower Earrings (Rose)",
             price: 50.00,
             image: "https://i.pinimg.com/474x/3d/16/4a/3d164a634d531caff1b0cb0e93ad780c.jpg",
-            description: "Simple, modern Earrings with a minimalist design.",
+            description: "Beautiful rose-colored flower earrings with an elegant design for a sophisticated look.",
             category: "beaded"
         },
         {
             id: 13,
-            name: "Flower Earrings(light blue)",
+            name: "Flower Earrings (Light Blue)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/b2/dd/22/b2dd220f9cceaf90421dd57aa80a6a32.jpg",
-            description: "Simple, modern Earrings with a minimalist design.",
+            description: "Serene light blue flower earrings with a calming color and delicate design.",
             category: "beaded"
         }
     ];

@@ -189,12 +189,15 @@
                 
                 // Create and append product cards
                 featuredProducts.forEach(product => {
+                    // Make sure product has a valid name
+                    const productName = product.name || 'Earrings';
+                    
                     const productCard = document.createElement('div');
                     productCard.className = 'product-card';
                     
                     productCard.innerHTML = `
                         <div class="product-image loading">
-                            <img src="${product.image}" alt="${product.name}" loading="lazy"
+                            <img src="${product.image}" alt="${productName}" loading="lazy"
                                  onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
                             <div class="product-overlay">
                                 <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
@@ -202,7 +205,7 @@
                             </div>
                         </div>
                         <div class="product-info">
-                            <h3>${product.name}</h3>
+                            <h3>${productName}</h3>
                             <p class="price">Rs ${product.price.toFixed(2)}</p>
                         </div>
                     `;

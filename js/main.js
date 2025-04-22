@@ -549,25 +549,6 @@ function displayProducts(filteredProducts = null) {
     // Create a document fragment for batch DOM updates - major performance improvement
     const fragment = document.createDocumentFragment();
     
-    // Use template literal once with placeholders and replace values
-    // This is much faster than creating multiple template literals
-    const productTemplate = `
-        <div class="product-card" data-product-id="PRODUCT_ID">
-            <div class="product-image loading">
-                <img src="PRODUCT_IMAGE" alt="PRODUCT_NAME" loading="lazy" 
-                     onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
-                <div class="product-overlay">
-                    <button class="add-to-cart" data-id="PRODUCT_ID">Add to Cart</button>
-                    <button class="view-details" data-id="PRODUCT_ID">View Details</button>
-                </div>
-            </div>
-            <div class="product-info">
-                <h3>PRODUCT_NAME</h3>
-                <p class="price">Rs PRODUCT_PRICE</p>
-            </div>
-        </div>
-    `;
-    
     // Process all products at once instead of with setTimeout delays
     productsToDisplay.forEach(product => {
         // Verify each product has required properties
@@ -576,20 +557,26 @@ function displayProducts(filteredProducts = null) {
             return;
         }
         
-        // Create a temporary element to hold the HTML
-        const tempDiv = document.createElement('div');
+        // Create product card element
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card';
+        productCard.setAttribute('data-product-id', product.id);
         
-        // Replace placeholders with actual values - faster than dynamic template creation
-        let productHTML = productTemplate
-            .replace(/PRODUCT_ID/g, product.id)
-            .replace('PRODUCT_IMAGE', product.image || '')
-            .replace('PRODUCT_NAME', product.name)
-            .replace('PRODUCT_PRICE', product.price.toFixed(2));
-        
-        tempDiv.innerHTML = productHTML;
-        
-        // Get the product card element from the temporary div
-        const productCard = tempDiv.firstElementChild;
+        // Set product card HTML with explicit product name
+        productCard.innerHTML = `
+            <div class="product-image loading">
+                <img src="${product.image || ''}" alt="${product.name}" loading="lazy" 
+                     onerror="this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');">
+                <div class="product-overlay">
+                    <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+                    <button class="view-details" data-id="${product.id}">View Details</button>
+                </div>
+            </div>
+            <div class="product-info">
+                <h3>${product.name}</h3>
+                <p class="price">Rs ${product.price.toFixed(2)}</p>
+            </div>
+        `;
         
         // Set up event handlers
         const addToCartBtn = productCard.querySelector('.add-to-cart');
