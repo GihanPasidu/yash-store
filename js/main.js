@@ -314,37 +314,77 @@ function displayCart() {
     if (cartSubtotal) cartSubtotal.textContent = `Rs ${total.toFixed(2)}`;
     cartTotal.textContent = `Rs ${total.toFixed(2)}`;
     
-    // Add event listeners for quantity controls and remove buttons
-    document.querySelectorAll('.minus').forEach(button => {
-        button.addEventListener('click', function() {
-            const id = parseInt(this.getAttribute('data-id'));
-            const item = cart.find(item => item.id === id);
-            if (item) updateQuantity(id, item.quantity - 1);
+    // Add event listeners with more aggressive binding
+    setTimeout(() => {
+        // Minus button handler
+        document.querySelectorAll('.minus').forEach(button => {
+            // Remove any existing listeners
+            button.replaceWith(button.cloneNode(true));
+            
+            // Get the fresh element
+            const newButton = document.querySelector(`.minus[data-id="${button.getAttribute('data-id')}"]`);
+            if (newButton) {
+                newButton.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    console.log('Minus clicked for ID:', id);
+                    const item = cart.find(item => item.id === id);
+                    if (item) updateQuantity(id, item.quantity - 1);
+                });
+            }
         });
-    });
-    
-    document.querySelectorAll('.plus').forEach(button => {
-        button.addEventListener('click', function() {
-            const id = parseInt(this.getAttribute('data-id'));
-            const item = cart.find(item => item.id === id);
-            if (item) updateQuantity(id, item.quantity + 1);
+        
+        // Plus button handler
+        document.querySelectorAll('.plus').forEach(button => {
+            // Remove any existing listeners
+            button.replaceWith(button.cloneNode(true));
+            
+            // Get the fresh element
+            const newButton = document.querySelector(`.plus[data-id="${button.getAttribute('data-id')}"]`);
+            if (newButton) {
+                newButton.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    console.log('Plus clicked for ID:', id);
+                    const item = cart.find(item => item.id === id);
+                    if (item) updateQuantity(id, item.quantity + 1);
+                });
+            }
         });
-    });
-    
-    document.querySelectorAll('.quantity-input').forEach(input => {
-        input.addEventListener('change', function() {
-            const id = parseInt(this.getAttribute('data-id'));
-            const newQuantity = parseInt(this.value);
-            if (!isNaN(newQuantity)) updateQuantity(id, newQuantity);
+        
+        // Quantity input handler
+        document.querySelectorAll('.quantity-input').forEach(input => {
+            // Remove any existing listeners
+            input.replaceWith(input.cloneNode(true));
+            
+            // Get the fresh element
+            const newInput = document.querySelector(`.quantity-input[data-id="${input.getAttribute('data-id')}"]`);
+            if (newInput) {
+                newInput.addEventListener('change', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    const newQuantity = parseInt(this.value);
+                    console.log('Quantity changed for ID:', id, 'New value:', newQuantity);
+                    if (!isNaN(newQuantity)) updateQuantity(id, newQuantity);
+                });
+            }
         });
-    });
-    
-    document.querySelectorAll('.remove-item').forEach(button => {
-        button.addEventListener('click', function() {
-            const id = parseInt(this.getAttribute('data-id'));
-            removeFromCart(id);
+        
+        // Remove button handler
+        document.querySelectorAll('.remove-item').forEach(button => {
+            // Remove any existing listeners
+            button.replaceWith(button.cloneNode(true));
+            
+            // Get the fresh element
+            const newButton = document.querySelector(`.remove-item[data-id="${button.getAttribute('data-id')}"]`);
+            if (newButton) {
+                newButton.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    console.log('Remove clicked for ID:', id);
+                    removeFromCart(id);
+                });
+            }
         });
-    });
+        
+        console.log('Event listeners attached to cart controls');
+    }, 100);
     
     // Add promo code functionality
     const applyPromoBtn = document.getElementById('apply-promo');
@@ -709,6 +749,60 @@ function displayCheckoutSummary() {
     checkoutTotal.textContent = `Rs ${total.toFixed(2)}`;
 }
 
+// Improve page path detection for Netlify
+function getCurrentPage() {
+    const path = window.location.pathname;
+    const netlifyPaths = {
+        '/': 'index',
+        '/index': 'index',
+        '/index.html': 'index',
+        '/products': 'products',
+        '/products.html': 'products',
+        '/cart': 'cart',
+        '/cart.html': 'cart',
+        '/checkout': 'checkout',
+        '/checkout.html': 'checkout',
+        '/product-details': 'product-details',
+        '/product-details.html': 'product-details'
+    };
+    
+    // Check if the path is in our mapping
+    for (const [key, value] of Object.entries(netlifyPaths)) {
+        if (path === key || path.startsWith(key + '/')) {
+            return value;
+        }
+    }
+    
+    // Default to index if no match
+    return 'index';
+}
+
+// Fix cart update for Netlify
+function updateCartForNetlify() {
+    const currentPage = getCurrentPage();
+    console.log('Current page detected as:', currentPage);
+    
+    if (currentPage === 'cart') {
+        // Force cart display in a way that works with Netlify
+        setTimeout(() => {
+            displayCart();
+            console.log('Cart display triggered for Netlify');
+            
+            // For mobile, apply specific fixes
+            if (window.innerWidth < 768) {
+                const cartItems = document.getElementById('cart-items');
+                if (cartItems) {
+                    cartItems.classList.add('mobile-cart');
+                    
+                    // These !important styles need to be inline for Netlify
+                    cartItems.setAttribute('style', 
+                        'display: block !important; visibility: visible !important; opacity: 1 !important;');
+                }
+            }
+        }, 300);
+    }
+}
+
 // Document ready functions
 document.addEventListener('DOMContentLoaded', function() {
     // Update cart count on page load
@@ -806,4 +900,55 @@ document.addEventListener('DOMContentLoaded', function() {
             input.style.fontSize = '16px'; // Prevents iOS zoom on focus
         });
     }
+    
+    // Netlify-specific initialization
+    updateCartForNetlify();
+    
+    // Update cart controls to work on Netlify
+    document.body.addEventListener('click', function(e) {
+        // Handle plus button clicks with event delegation
+        if (e.target.classList.contains('plus') || e.target.closest('.plus')) {
+            const button = e.target.classList.contains('plus') ? e.target : e.target.closest('.plus');
+            const id = parseInt(button.getAttribute('data-id'));
+            console.log('Plus button clicked via delegation for ID:', id);
+            
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                updateQuantity(id, item.quantity + 1);
+                // Force reload for Netlify if needed
+                if (getCurrentPage() === 'cart') {
+                    setTimeout(displayCart, 50);
+                }
+            }
+        }
+        
+        // Handle minus button clicks with event delegation
+        if (e.target.classList.contains('minus') || e.target.closest('.minus')) {
+            const button = e.target.classList.contains('minus') ? e.target : e.target.closest('.minus');
+            const id = parseInt(button.getAttribute('data-id'));
+            console.log('Minus button clicked via delegation for ID:', id);
+            
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                updateQuantity(id, item.quantity - 1);
+                // Force reload for Netlify if needed
+                if (getCurrentPage() === 'cart') {
+                    setTimeout(displayCart, 50);
+                }
+            }
+        }
+        
+        // Handle remove button clicks with event delegation
+        if (e.target.classList.contains('remove-item') || e.target.closest('.remove-item')) {
+            const button = e.target.classList.contains('remove-item') ? e.target : e.target.closest('.remove-item');
+            const id = parseInt(button.getAttribute('data-id'));
+            console.log('Remove button clicked via delegation for ID:', id);
+            
+            removeFromCart(id);
+            // Force reload for Netlify if needed
+            if (getCurrentPage() === 'cart') {
+                setTimeout(displayCart, 50);
+            }
+        }
+    });
 });

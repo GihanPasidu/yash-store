@@ -89,6 +89,44 @@
     
     <script src="js/main.js"></script>
     <script>
+        // Netlify-specific fixes for cart functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fix for Netlify routing
+            console.log('Initializing cart page on Netlify');
+            
+            // Apply styles with delay to ensure they override Netlify's
+            setTimeout(function() {
+                const cartItems = document.getElementById('cart-items');
+                if (cartItems) {
+                    // Force styles to be visible
+                    cartItems.setAttribute('style', 
+                        'display: block !important; visibility: visible !important; opacity: 1 !important;');
+                    
+                    console.log('Applied Netlify-specific styles to cart container');
+                    
+                    // Force cart to display
+                    if (typeof displayCart === 'function') {
+                        displayCart();
+                        console.log('Forced cart display for Netlify');
+                    }
+                }
+                
+                // Check if mobile and add specific mobile overrides
+                if (window.innerWidth < 768) {
+                    document.querySelectorAll('.cart-item').forEach(item => {
+                        item.setAttribute('style', 
+                            'display: grid !important; visibility: visible !important; opacity: 1 !important;');
+                    });
+                    
+                    // Make buttons more tappable
+                    document.querySelectorAll('.quantity-btn, .remove-item').forEach(btn => {
+                        btn.style.minHeight = '44px';
+                        btn.style.minWidth = '44px';
+                    });
+                }
+            }, 500);
+        });
+        
         // Check if we're on a mobile device and adjust layout if needed
         document.addEventListener('DOMContentLoaded', function() {
             if (window.innerWidth < 768) {
@@ -115,6 +153,35 @@
                     }, 1000);
                 }
             }
+            
+            // Add direct click handlers for mobile cart controls
+            document.body.addEventListener('click', function(e) {
+                // Handle plus button clicks
+                if (e.target.classList.contains('plus') || e.target.closest('.plus')) {
+                    const button = e.target.classList.contains('plus') ? e.target : e.target.closest('.plus');
+                    const id = parseInt(button.getAttribute('data-id'));
+                    console.log('Plus button clicked via delegation for ID:', id);
+                    const item = cart.find(item => item.id === id);
+                    if (item) updateQuantity(id, item.quantity + 1);
+                }
+                
+                // Handle minus button clicks
+                if (e.target.classList.contains('minus') || e.target.closest('.minus')) {
+                    const button = e.target.classList.contains('minus') ? e.target : e.target.closest('.minus');
+                    const id = parseInt(button.getAttribute('data-id'));
+                    console.log('Minus button clicked via delegation for ID:', id);
+                    const item = cart.find(item => item.id === id);
+                    if (item) updateQuantity(id, item.quantity - 1);
+                }
+                
+                // Handle remove button clicks
+                if (e.target.classList.contains('remove-item') || e.target.closest('.remove-item')) {
+                    const button = e.target.classList.contains('remove-item') ? e.target : e.target.closest('.remove-item');
+                    const id = parseInt(button.getAttribute('data-id'));
+                    console.log('Remove button clicked via delegation for ID:', id);
+                    removeFromCart(id);
+                }
+            });
         });
     </script>
 </body>
