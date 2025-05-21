@@ -31,6 +31,15 @@
 
         <section class="products">
             <div class="container">
+                <!-- Category filter section -->
+                <div class="category-filter" id="category-filter">
+                    <button class="category-btn active" data-category="all">All Styles</button>
+                    <button class="category-btn" data-category="style 01">Style 01</button>
+                    <button class="category-btn" data-category="style 02">Style 02</button>
+                    <button class="category-btn" data-category="style 03">Style 03</button>
+                    <button class="category-btn" data-category="style 04">Style 04</button>
+                </div>
+                
                 <div id="products-grid" class="products-grid">
                     <!-- Products will be dynamically loaded here by JavaScript -->
                     <div class="loading-products">
@@ -104,6 +113,34 @@
             
             // Final attempt with a longer delay if still needed
             setTimeout(attemptDisplayProducts, 1500);
+            
+            // Set up category filter functionality
+            const categoryFilter = document.getElementById('category-filter');
+            if (categoryFilter) {
+                categoryFilter.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('category-btn')) {
+                        const buttons = categoryFilter.querySelectorAll('.category-btn');
+                        buttons.forEach(btn => btn.classList.remove('active'));
+                        e.target.classList.add('active');
+                        
+                        const category = e.target.getAttribute('data-category');
+                        console.log('Filtering products by category:', category);
+                        
+                        if (typeof filterProductsByCategory === 'function') {
+                            filterProductsByCategory(category);
+                        } else {
+                            console.warn('filterProductsByCategory function not available');
+                            // Fallback filtering implementation
+                            if (window.products) {
+                                const filtered = category === 'all' ? 
+                                    window.products : 
+                                    window.products.filter(p => p.category === category);
+                                displayProducts(filtered);
+                            }
+                        }
+                    }
+                });
+            }
             
             // Fallback method if products still don't load
             setTimeout(() => {
