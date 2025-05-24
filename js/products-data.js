@@ -17,7 +17,7 @@
         },
         {
             id: 2,
-            name: "White Flower Earrings",
+            name: "Flower Earrings (White)",
             price: 50.00,
             image: "https://i.pinimg.com/474x/cb/f8/f1/cbf8f16368fd24af8e6ed9ff776c0c41.jpg",
             description: "Delicate white flower-shaped earrings that add a touch of spring to any outfit.",
@@ -113,7 +113,7 @@
         },
         {
             id: 14,
-            name: "Flower Earrings (Red)",
+            name: "Flower Earrings (Yellow)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/61/d2/fa/61d2fa779864e7df8d126a370b8edf4a.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
@@ -121,7 +121,7 @@
         },
         {
             id: 15,
-            name: "Flower Earrings (Red)",
+            name: "Flower Earrings (Brown)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/37/60/09/376009773b2636fa25c08abf91d039b3.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
@@ -129,7 +129,7 @@
         },
         {
             id: 16,
-            name: "Flower Earrings (Red)",
+            name: "Flower Earrings (Light Rose)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/c7/de/a9/c7dea9d38508068472594a9bbd874eeb.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
@@ -145,7 +145,7 @@
         },
         {
             id: 18,
-            name: "Flower Earrings (Red)",
+            name: "Flower Earrings (Light Pink)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/bd/76/be/bd76bea79f35560670a85809f48d7b27.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
@@ -153,7 +153,7 @@
         },
         {
             id: 19,
-            name: "Flower Earrings (Red)",
+            name: "Flower Earrings (Light Blue)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/ae/e1/8c/aee18c365b0087dcdcdfe3814e5ad170.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
@@ -161,7 +161,7 @@
         },
         {
             id: 20,
-            name: "Flower Earrings (Red)",
+            name: "Flower Earrings (Blue)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/27/2c/61/272c61b4817b3b662f8fa814f9c363b4.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
@@ -169,7 +169,7 @@
         },
         {
             id: 21,
-            name: "Flower Earrings (Red)",
+            name: "Flower Earrings (Green)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/bd/58/61/bd58613247afe30edbdd79c9ab9f41d4.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
@@ -177,7 +177,7 @@
         },
         {
             id: 22,
-            name: "Flower Earrings (Red)",
+            name: "Flower Earrings (Brown)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/b4/88/85/b4888561836bfad1ac222de627ad610f.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
@@ -185,57 +185,57 @@
         },
         {
             id: 23,
-            name: "Flower Earrings (Red)",
+            name: "Flower Earrings (White)",
+            price: 50.00,
+            image: "https://i.pinimg.com/736x/df/ff/b3/dfffb35df19daaf16bed50f424d9de57.jpg",
+            description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
+            category: "style 03"
+        },
+        {
+            id: 24,
+            name: "Flower Earrings (Green)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/f1/9a/e9/f19ae943e4cbae4db8bea114032af7e3.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
             category: "style 04"
         },
         {
-            id: 24,
-            name: "Flower Earrings (Red)",
+            id: 25,
+            name: "Flower Earrings (White)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/49/4b/aa/494baaaee8dd1ed8f330915d83a4bce7.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
             category: "style 04"
         },
         {
-            id: 25,
-            name: "Flower Earrings (Red)",
+            id: 26,
+            name: "Flower Earrings (Light Pink)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/04/88/55/0488557f53437f51ad9934fb8b28b9bb.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
             category: "style 04"
         },
         {
-            id: 26,
-            name: "Flower Earrings (Red)",
+            id: 27,
+            name: "Flower Earrings (Light Blue)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/98/87/66/9887665bfbc9d446c5c9d4b76b1f82ae.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
             category: "style 04"
         },
         {
-            id: 27,
-            name: "Flower Earrings (Red)",
+            id: 28,
+            name: "Flower Earrings (Purple)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/9e/ee/b8/9eeeb8fdcbb534f972eba4c1019821d4.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
             category: "style 04"
         },
         {
-            id: 28,
-            name: "Flower Earrings (Red)",
+            id: 29,
+            name: "Flower Earrings (Brown)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/01/c4/96/01c496d2af27fb3024f826418b4698ff.jpg",
-            description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
-            category: "style 04"
-        },
-        {
-            id: 29,
-            name: "Flower Earrings (Red)",
-            price: 50.00,
-            image: "https://i.pinimg.com/736x/f0/64/07/f06407349145fef59798a6db1bc023d8.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
             category: "style 04"
         },
@@ -243,21 +243,29 @@
             id: 30,
             name: "Flower Earrings (Red)",
             price: 50.00,
-            image: "https://i.pinimg.com/736x/45/74/6a/45746a818551ce376e5284d32cf89d7d.jpg",
+            image: "https://i.pinimg.com/736x/f0/64/07/f06407349145fef59798a6db1bc023d8.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
             category: "style 04"
         },
         {
             id: 31,
-            name: "Flower Earrings (Red)",
+            name: "Flower Earrings (Light Rose)",
+            price: 50.00,
+            image: "https://i.pinimg.com/736x/45/74/6a/45746a818551ce376e5284d32cf89d7d.jpg",
+            description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
+            category: "style 04"
+        },
+        {
+            id: 32,
+            name: "Flower Earrings (Yellow)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/1f/ae/2a/1fae2a23fa1fe5aad2fe5697c153f26a.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
             category: "style 04"
         },
         {
-            id: 32,
-            name: "Flower Earrings (Red)",
+            id: 33,
+            name: "Flower Earrings (Blue)",
             price: 50.00,
             image: "https://i.pinimg.com/736x/b5/5a/2e/b55a2e512aa7c6a9a64f511fa170b611.jpg",
             description: "Beautiful red flower earrings with a delicate design, perfect for adding color to your style.",
