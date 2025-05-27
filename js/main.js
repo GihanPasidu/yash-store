@@ -2,7 +2,7 @@
 // Copyright © 2023 CloudNextra Solution
 
 // App version for cache busting
-const APP_VERSION = '1.0.1'; // Increment this when you deploy updates
+const APP_VERSION = '1.0.2'; // Incremented for dark mode feature
 
 // Check if we need to clear cache (version mismatch)
 function checkForUpdates() {
@@ -916,8 +916,58 @@ function updateCartForNetlify() {
     }
 }
 
+// Theme management functionality
+function initThemeManagement() {
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeColorMeta = document.getElementById('theme-color-meta');
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    // Function to set theme
+    function setTheme(theme) {
+        if (theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+            if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            if (themeColorMeta) themeColorMeta.content = '#121212';
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+            if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            if (themeColorMeta) themeColorMeta.content = '#ffffff';
+        }
+    }
+    
+    // Check for saved theme preference or use system preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        setTheme(savedTheme);
+    } else if (prefersDarkScheme.matches) {
+        setTheme('dark');
+    }
+    
+    // Handle theme toggle button click
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        });
+    }
+    
+    // Listen for system preference changes
+    prefersDarkScheme.addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+            setTheme(e.matches ? 'dark' : 'light');
+        }
+    });
+    
+    console.log('Theme management initialized');
+}
+
 // Optimize the document ready handler to be more efficient
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize theme management early for smoother visual transition
+    initThemeManagement();
+    
     // Immediate tasks that must happen right away
     updateCartCount();
     

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart | YashStore</title>
     
+    <!-- Theme color for browsers -->
+    <meta name="theme-color" content="#ffffff" id="theme-color-meta">
+    
     <!-- Add resource hints for faster loading -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,8 +43,13 @@
             <div class="logo">
                 <a href="index.html"><h1>YashStore</h1></a>
             </div>
-            <div class="cart-icon">
-                <a href="cart.html"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></a>
+            <div class="header-right">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="cart-icon">
+                    <a href="cart.html"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></a>
+                </div>
             </div>
         </div>
     </header>

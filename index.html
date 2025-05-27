@@ -81,6 +81,9 @@
         "priceRange": "$$"
     }
     </script>
+    
+    <!-- Theme color for browsers -->
+    <meta name="theme-color" content="#ffffff" id="theme-color-meta">
 </head>
 <body>
     <header>
@@ -88,8 +91,13 @@
             <div class="logo">
                 <a href="index.html"><h1>YashStore</h1></a>
             </div>
-            <div class="cart-icon">
-                <a href="cart.html"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></a>
+            <div class="header-right">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="cart-icon">
+                    <a href="cart.html"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></a>
+                </div>
             </div>
         </div>
     </header>

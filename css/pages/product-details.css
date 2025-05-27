@@ -1,6 +1,7 @@
 .breadcrumb {
     padding: 20px 0;
-    color: var(--secondary-color);
+    color: var(--text-color);
+    transition: color 0.3s ease;
 }
 
 .breadcrumb a {
@@ -16,12 +17,12 @@
 .back-button {
     display: inline-flex;
     align-items: center;
-    color: var(--primary-color);
+    color: var(--text-color);
     font-weight: 500;
     padding: 8px 16px;
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: var(--card-bg);
     border-radius: 4px;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease, background-color 0.3s ease, color 0.3s ease;
 }
 
 .back-button i {
@@ -38,11 +39,12 @@
 .page-header {
     position: relative;
     margin-bottom: 40px;
-    background-color: rgba(247, 249, 250, 0.7);
+    background-color: var(--bg-secondary);
     padding: 60px 0;
     text-align: center;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px var(--card-shadow);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .product-details-container {
@@ -53,10 +55,11 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 40px;
-    background: white;
+    background: var(--card-bg);
     border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 5px 20px var(--card-shadow);
     overflow: hidden;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .product-details .product-image {
@@ -86,8 +89,9 @@
 
 .product-details h1 {
     font-size: 2.2rem;
-    color: var(--primary-color);
+    color: var(--text-color);
     margin-bottom: 20px;
+    transition: color 0.3s ease;
 }
 
 .product-details .price {
@@ -107,7 +111,8 @@
 .product-description {
     margin-bottom: 30px;
     line-height: 1.8;
-    color: var(--secondary-color);
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
 }
 
 .product-features {
@@ -117,7 +122,8 @@
 .product-features h3 {
     font-size: 1.2rem;
     margin-bottom: 15px;
-    color: var(--primary-color);
+    color: var(--text-color);
+    transition: color 0.3s ease;
 }
 
 .features-list {
@@ -128,6 +134,8 @@
     margin-bottom: 10px;
     padding-left: 25px;
     position: relative;
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
 }
 
 .features-list li:before {
@@ -157,17 +165,13 @@
     background: var(--gray-color);
     border: none;
     border-radius: 4px;
-    color: var(--primary-color);
+    color: var(--text-color);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease, background-color 0.3s ease, color 0.3s ease;
 }
 
-.product-actions .wishlist-btn:hover {
-    background: #e6e6e6;
-}
-
-.product-actions .wishlist-btn i {
-    font-size: 1.1rem;
+[data-theme="dark"] .product-actions .wishlist-btn:hover {
+    background: #3a3a3a;
 }
 
 .product-loading {
@@ -176,7 +180,8 @@
     justify-content: center;
     align-items: center;
     height: 300px;
-    color: var(--secondary-color);
+    color: var(--text-color);
+    transition: color 0.3s ease;
 }
 
 .product-loading i {

@@ -23,7 +23,7 @@
 }
 
 .order-success-content {
-    background-color: white;
+    background-color: var(--bg-color);
     border-radius: 10px;
     padding: 40px 30px;
     width: 90%;
@@ -31,7 +31,7 @@
     text-align: center;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     transform: translateY(20px);
-    transition: transform 0.4s ease;
+    transition: transform 0.4s ease, background-color 0.3s ease;
     position: relative;
 }
 
@@ -58,15 +58,17 @@
 
 .order-success-title {
     font-size: 24px;
-    color: var(--primary-color);
+    color: var(--text-color);
     margin-bottom: 15px;
     font-family: 'Playfair Display', serif;
+    transition: color 0.3s ease;
 }
 
 .order-success-message {
-    color: var(--secondary-color);
+    color: var(--text-secondary);
     margin-bottom: 30px;
     line-height: 1.6;
+    transition: color 0.3s ease;
 }
 
 .order-success-loader {
