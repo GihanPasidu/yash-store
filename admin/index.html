@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | YashStore</title>
+    <!-- Theme color for browsers -->
+    <meta name="theme-color" content="#ffffff" id="theme-color-meta">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-login-container">
+        <div class="admin-login-box">
+            <div class="admin-logo">
+                <h1>YashStore</h1>
+                <p>Admin Dashboard</p>
+            </div>
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div id="login-error" class="error-message"></div>
+                <button type="submit" class="admin-btn">Login</button>
+            </form>
+            <div class="admin-footer">
+                <p>YashStore Admin © 2025</p>
+                <p><a href="../index.html">Return to Store</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dark mode toggle -->
+    <div style="position:fixed; bottom:20px; right:20px;">
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    <script src="js/admin-auth.js"></script>
+    <script>
+        // Simple theme toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeColorMeta = document.getElementById('theme-color-meta');
+            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+            
+            // Function to set theme
+            function setTheme(theme) {
+                if (theme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                    if (themeColorMeta) themeColorMeta.content = '#121212';
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                    if (themeToggle) themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                    if (themeColorMeta) themeColorMeta.content = '#ffffff';
+                }
+            }
+            
+            // Check for saved theme preference or use system preference
+            const savedTheme = localStorage.getItem('theme');
+            
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                setTheme(prefersDarkScheme.matches ? 'dark' : 'light');
+            }
+            
+            // Handle theme toggle button click
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    const currentTheme = document.documentElement.getAttribute('data-theme');
+                    setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+                });
+            }
+            
+            // Listen for changes in system theme preference
+            prefersDarkScheme.addEventListener('change', (e) => {
+                if (!localStorage.getItem('theme')) {
+                    setTheme(e.matches ? 'dark' : 'light');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

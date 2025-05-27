@@ -273,22 +273,6 @@
         }
     ];
 
-    // Make the products array available globally in a memory-efficient way
+    // Make products available globally
     window.products = products;
-
-    // Add a global flag to indicate products are loaded
-    window.productsLoaded = true;
-
-    // Use a getter instead of a function to save memory
-    Object.defineProperty(window, 'getProducts', {
-        get: function() {
-            return function() { return products; };
-        },
-        configurable: true
-    });
-
-    // Dispatch an event to notify when products are loaded
-    document.dispatchEvent(new CustomEvent('productsLoaded', { detail: products }));
-    
-    console.log('Products data loaded, count:', products.length);
 })();
