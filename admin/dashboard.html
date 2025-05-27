@@ -23,6 +23,8 @@
                     <li class="active" data-section="products"><a href="#products"><i class="fas fa-box"></i> <span>Products</span></a></li>
                     <li data-section="categories"><a href="#categories"><i class="fas fa-tags"></i> <span>Categories</span></a></li>
                     <li data-section="orders"><a href="#orders"><i class="fas fa-shopping-cart"></i> <span>Orders</span></a></li>
+                    <li data-section="customers"><a href="#customers"><i class="fas fa-users"></i> <span>Customers</span></a></li>
+                    <li data-section="analytics"><a href="#analytics"><i class="fas fa-chart-line"></i> <span>Analytics</span></a></li>
                     <li data-section="settings"><a href="#settings"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
                 </ul>
             </nav>
@@ -51,185 +53,624 @@
             
             <!-- Products Section -->
             <div class="admin-main active" id="products-section">
-                <div class="admin-page-header">
-                    <h1>Products Management</h1>
-                    <div class="header-actions">
-                        <button id="import-export-btn" class="admin-btn secondary-btn"><i class="fas fa-sync-alt"></i> Import/Export</button>
-                        <button id="add-product-btn" class="admin-btn"><i class="fas fa-plus"></i> Add Product</button>
-                    </div>
-                </div>
-                
-                <div class="admin-stats">
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-box"></i></div>
-                        <div class="stat-data">
-                            <h3>Total Products</h3>
-                            <p id="total-products">0</p>
+                <div class="section-components">
+                    <!-- Component: Header -->
+                    <div class="component component-header">
+                        <div class="admin-page-header">
+                            <h1>Products Management</h1>
+                            <div class="header-actions">
+                                <button id="import-export-btn" class="admin-btn secondary-btn"><i class="fas fa-sync-alt"></i> Import/Export</button>
+                                <button id="add-product-btn" class="admin-btn"><i class="fas fa-plus"></i> Add Product</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-tags"></i></div>
-                        <div class="stat-data">
-                            <h3>Categories</h3>
-                            <p id="total-categories">0</p>
+                    
+                    <!-- Component: Stats Cards -->
+                    <div class="component component-stats">
+                        <div class="admin-stats">
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-box"></i></div>
+                                <div class="stat-data">
+                                    <h3>Total Products</h3>
+                                    <p id="total-products">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-tags"></i></div>
+                                <div class="stat-data">
+                                    <h3>Categories</h3>
+                                    <p id="total-categories">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
+                                <div class="stat-data">
+                                    <h3>Orders</h3>
+                                    <p id="total-orders">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
+                                <div class="stat-data">
+                                    <h3>Revenue</h3>
+                                    <p id="total-revenue">Rs 0.00</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
-                        <div class="stat-data">
-                            <h3>Orders</h3>
-                            <p>0</p>
+                    
+                    <!-- Component: Data Table -->
+                    <div class="component component-table">
+                        <div class="admin-table-container">
+                            <div class="table-header">
+                                <div class="table-title">All Products</div>
+                                <div class="table-filters">
+                                    <select id="product-category-filter">
+                                        <option value="">All Categories</option>
+                                        <option value="style 01">Style 01</option>
+                                        <option value="style 02">Style 02</option>
+                                        <option value="style 03">Style 03</option>
+                                        <option value="style 04">Style 04</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <table class="admin-table" id="products-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Image</th>
+                                        <th>Product Name</th>
+                                        <th>Price</th>
+                                        <th>Category</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="products-table-body">
+                                    <!-- Products will be populated here by JavaScript -->
+                                    <tr>
+                                        <td colspan="6" class="loading-message">
+                                            <i class="fas fa-spinner fa-spin"></i> Loading products...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="table-pagination" id="products-pagination">
+                                <!-- Pagination will be added here by JavaScript -->
+                            </div>
                         </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
-                        <div class="stat-data">
-                            <h3>Revenue</h3>
-                            <p>Rs 0.00</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="admin-table-container">
-                    <table class="admin-table" id="products-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Image</th>
-                                <th>Product Name</th>
-                                <th>Price</th>
-                                <th>Category</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="products-table-body">
-                            <!-- Products will be populated here by JavaScript -->
-                            <tr>
-                                <td colspan="6" class="loading-message">
-                                    <i class="fas fa-spinner fa-spin"></i> Loading products...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
             
             <!-- Categories Section -->
             <div class="admin-main" id="categories-section">
-                <div class="admin-page-header">
-                    <h1>Categories Management</h1>
-                    <button id="add-category-btn" class="admin-btn"><i class="fas fa-plus"></i> Add Category</button>
-                </div>
-                
-                <div class="admin-table-container">
-                    <table class="admin-table" id="categories-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Category Name</th>
-                                <th>Products</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="categories-table-body">
-                            <!-- Categories will be populated here by JavaScript -->
-                            <tr>
-                                <td colspan="4" class="loading-message">
-                                    <i class="fas fa-spinner fa-spin"></i> Loading categories...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="section-components">
+                    <!-- Component: Header -->
+                    <div class="component component-header">
+                        <div class="admin-page-header">
+                            <h1>Categories Management</h1>
+                            <button id="add-category-btn" class="admin-btn"><i class="fas fa-plus"></i> Add Category</button>
+                        </div>
+                    </div>
+
+                    <!-- Component: Category Stats -->
+                    <div class="component component-stats">
+                        <div class="admin-stats">
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-tags"></i></div>
+                                <div class="stat-data">
+                                    <h3>Total Categories</h3>
+                                    <p id="categories-count">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-box"></i></div>
+                                <div class="stat-data">
+                                    <h3>Categorized Products</h3>
+                                    <p id="categorized-products">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-chart-pie"></i></div>
+                                <div class="stat-data">
+                                    <h3>Most Popular</h3>
+                                    <p id="popular-category">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Component: Categories Table -->
+                    <div class="component component-table">
+                        <div class="admin-table-container">
+                            <table class="admin-table" id="categories-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Category Name</th>
+                                        <th>Products</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="categories-table-body">
+                                    <!-- Categories will be populated here by JavaScript -->
+                                    <tr>
+                                        <td colspan="4" class="loading-message">
+                                            <i class="fas fa-spinner fa-spin"></i> Loading categories...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Component: Category Cards -->
+                    <div class="component component-cards">
+                        <div class="category-cards">
+                            <h2>Category Overview</h2>
+                            <div class="category-grid" id="category-grid">
+                                <!-- Category cards will be added here by JavaScript -->
+                                <div class="loading-placeholder">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    <p>Loading categories...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
             <!-- Orders Section -->
             <div class="admin-main" id="orders-section">
-                <div class="admin-page-header">
-                    <h1>Orders Management</h1>
+                <div class="section-components">
+                    <!-- Component: Header -->
+                    <div class="component component-header">
+                        <div class="admin-page-header">
+                            <h1>Orders Management</h1>
+                            <div class="header-actions">
+                                <div class="date-filter">
+                                    <input type="date" id="order-date-filter" class="date-picker">
+                                </div>
+                                <select id="order-status-filter" class="status-filter">
+                                    <option value="">All Statuses</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="processing">Processing</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Component: Order Stats -->
+                    <div class="component component-stats">
+                        <div class="admin-stats">
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
+                                <div class="stat-data">
+                                    <h3>Total Orders</h3>
+                                    <p id="orders-count">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                                <div class="stat-data">
+                                    <h3>Pending Orders</h3>
+                                    <p id="pending-orders">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
+                                <div class="stat-data">
+                                    <h3>Total Revenue</h3>
+                                    <p id="orders-revenue">Rs 0.00</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                                <div class="stat-data">
+                                    <h3>Avg. Order Value</h3>
+                                    <p id="avg-order">Rs 0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Component: Orders Table -->
+                    <div class="component component-table">
+                        <div class="admin-table-container">
+                            <table class="admin-table" id="orders-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Date</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orders-table-body">
+                                    <tr>
+                                        <td colspan="6" class="no-data">No orders yet</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Component: Recent Activity -->
+                    <div class="component component-activity">
+                        <div class="activity-feed">
+                            <h2>Recent Order Activity</h2>
+                            <div id="order-activity" class="activity-list">
+                                <div class="activity-item">
+                                    <div class="activity-icon"><i class="fas fa-check-circle"></i></div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Order #1003 Placed</div>
+                                        <div class="activity-meta">By Robert Johnson • Just now</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon"><i class="fas fa-truck"></i></div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Order #1002 Shipped</div>
+                                        <div class="activity-meta">To Jane Smith • 2 hours ago</div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon"><i class="fas fa-money-bill-wave"></i></div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Order #1001 Payment Received</div>
+                                        <div class="activity-meta">From John Doe • 5 hours ago</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="admin-table-container">
-                    <table class="admin-table" id="orders-table">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Customer</th>
-                                <th>Date</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="orders-table-body">
-                            <tr>
-                                <td colspan="6" class="no-data">No orders yet</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            </div>
+            
+            <!-- Customers Section -->
+            <div class="admin-main" id="customers-section">
+                <div class="section-components">
+                    <!-- Component: Header -->
+                    <div class="component component-header">
+                        <div class="admin-page-header">
+                            <h1>Customers Management</h1>
+                            <div class="header-actions">
+                                <button id="export-customers-btn" class="admin-btn secondary-btn">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
+                                <button id="add-customer-btn" class="admin-btn">
+                                    <i class="fas fa-user-plus"></i> Add Customer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Component: Customer Stats -->
+                    <div class="component component-stats">
+                        <div class="admin-stats">
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                                <div class="stat-data">
+                                    <h3>Total Customers</h3>
+                                    <p id="total-customers">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-user-plus"></i></div>
+                                <div class="stat-data">
+                                    <h3>New Customers</h3>
+                                    <p id="new-customers">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-chart-pie"></i></div>
+                                <div class="stat-data">
+                                    <h3>Customer Retention</h3>
+                                    <p id="customer-retention">0%</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                                <div class="stat-data">
+                                    <h3>Avg. Customer Value</h3>
+                                    <p id="avg-customer-value">Rs 0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Component: Customers Table -->
+                    <div class="component component-table">
+                        <div class="admin-table-container">
+                            <table class="admin-table" id="customers-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Orders</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customers-table-body">
+                                    <tr>
+                                        <td colspan="6" class="no-data">No customers yet</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Component: Customer Insights -->
+                    <div class="component component-insights">
+                        <div class="insights-container">
+                            <h2>Customer Insights</h2>
+                            <div class="insights-cards">
+                                <div class="insight-card">
+                                    <div class="insight-title">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Top Locations</span>
+                                    </div>
+                                    <div class="insight-content">
+                                        <ul class="location-list">
+                                            <li><span class="location-name">Colombo</span> <span class="location-count">45%</span></li>
+                                            <li><span class="location-name">Kandy</span> <span class="location-count">20%</span></li>
+                                            <li><span class="location-name">Galle</span> <span class="location-count">15%</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="insight-card">
+                                    <div class="insight-title">
+                                        <i class="fas fa-cart-shopping"></i>
+                                        <span>Popular Products</span>
+                                    </div>
+                                    <div class="insight-content">
+                                        <ul class="product-list">
+                                            <li><span class="product-name">Flower Earrings (Red)</span></li>
+                                            <li><span class="product-name">Flower Earrings (Blue)</span></li>
+                                            <li><span class="product-name">Black Stud Earrings</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analytics Section -->
+            <div class="admin-main" id="analytics-section">
+                <div class="section-components">
+                    <!-- Component: Header -->
+                    <div class="component component-header">
+                        <div class="admin-page-header">
+                            <h1>Store Analytics</h1>
+                            <div class="header-actions">
+                                <div class="date-range">
+                                    <select id="date-range-select">
+                                        <option value="7">Last 7 days</option>
+                                        <option value="30" selected>Last 30 days</option>
+                                        <option value="90">Last 90 days</option>
+                                        <option value="365">Last year</option>
+                                        <option value="custom">Custom range</option>
+                                    </select>
+                                </div>
+                                <button class="admin-btn secondary-btn" id="export-reports-btn">
+                                    <i class="fas fa-download"></i> Export Reports
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Component: Analytics Stats -->
+                    <div class="component component-stats">
+                        <div class="admin-stats">
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                                <div class="stat-data">
+                                    <h3>Total Sales</h3>
+                                    <p id="total-sales">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-eye"></i></div>
+                                <div class="stat-data">
+                                    <h3>Page Views</h3>
+                                    <p id="page-views">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
+                                <div class="stat-data">
+                                    <h3>Conversion Rate</h3>
+                                    <p id="conversion-rate">0%</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                                <div class="stat-data">
+                                    <h3>Average Order</h3>
+                                    <p id="avg-order-value">Rs 0.00</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Component: Charts -->
+                    <div class="component component-charts">
+                        <div class="charts-container">
+                            <div class="chart-card">
+                                <h3>Monthly Sales</h3>
+                                <div class="chart-placeholder" id="sales-chart">
+                                    <i class="fas fa-chart-bar"></i>
+                                    <p>Sales analytics visualization will appear here</p>
+                                </div>
+                            </div>
+                            <div class="chart-card">
+                                <h3>Popular Products</h3>
+                                <div class="chart-placeholder" id="products-chart">
+                                    <i class="fas fa-chart-pie"></i>
+                                    <p>Product popularity analysis will appear here</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Component: Performance Metrics -->
+                    <div class="component component-metrics">
+                        <div class="metrics-container">
+                            <h2>Performance Metrics</h2>
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <div class="metric-title">Traffic Sources</div>
+                                    <div class="metric-chart">
+                                        <div class="chart-placeholder">
+                                            <i class="fas fa-chart-simple"></i>
+                                        </div>
+                                    </div>
+                                    <div class="metric-legend">
+                                        <div class="legend-item"><span class="legend-color" style="background-color: #3498db;"></span> Direct</div>
+                                        <div class="legend-item"><span class="legend-color" style="background-color: #2ecc71;"></span> Social</div>
+                                        <div class="legend-item"><span class="legend-color" style="background-color: #e74c3c;"></span> Search</div>
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-title">Device Distribution</div>
+                                    <div class="metric-chart">
+                                        <div class="chart-placeholder">
+                                            <i class="fas fa-mobile-screen"></i>
+                                        </div>
+                                    </div>
+                                    <div class="metric-legend">
+                                        <div class="legend-item"><span class="legend-color" style="background-color: #3498db;"></span> Mobile</div>
+                                        <div class="legend-item"><span class="legend-color" style="background-color: #2ecc71;"></span> Desktop</div>
+                                        <div class="legend-item"><span class="legend-color" style="background-color: #e74c3c;"></span> Tablet</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
             <!-- Settings Section -->
             <div class="admin-main" id="settings-section">
-                <div class="admin-page-header">
-                    <h1>Store Settings</h1>
-                </div>
-                
-                <div class="settings-container">
-                    <div class="settings-card">
-                        <h2>General Settings</h2>
-                        <form id="general-settings-form" class="settings-form">
-                            <div class="form-group">
-                                <label for="store-name">Store Name</label>
-                                <input type="text" id="store-name" value="YashStore">
-                            </div>
-                            <div class="form-group">
-                                <label for="store-description">Store Description</label>
-                                <textarea id="store-description" rows="3">Premium handcrafted earrings collection</textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="currency">Currency</label>
-                                <select id="currency">
-                                    <option value="USD">USD ($)</option>
-                                    <option value="LKR" selected>LKR (Rs)</option>
-                                    <option value="EUR">EUR (€)</option>
-                                    <option value="GBP">GBP (£)</option>
-                                </select>
-                            </div>
-                            <div class="form-actions">
-                                <button type="submit" class="admin-btn">Save Settings</button>
-                            </div>
-                        </form>
+                <div class="section-components">
+                    <!-- Component: Header -->
+                    <div class="component component-header">
+                        <div class="admin-page-header">
+                            <h1>Store Settings</h1>
+                            <button id="restore-defaults" class="admin-btn secondary-btn">
+                                <i class="fas fa-undo"></i> Restore Defaults
+                            </button>
+                        </div>
                     </div>
-                    
-                    <div class="settings-card">
-                        <h2>Admin Account</h2>
-                        <form id="admin-settings-form" class="settings-form">
-                            <div class="form-group">
-                                <label for="admin-name">Admin Name</label>
-                                <input type="text" id="admin-name" value="Admin">
+
+                    <!-- Component: Settings Cards -->
+                    <div class="component component-settings">
+                        <div class="settings-container">
+                            <!-- General Settings Card -->
+                            <div class="settings-card">
+                                <h2>General Settings</h2>
+                                <form id="general-settings-form" class="settings-form">
+                                    <div class="form-group">
+                                        <label for="store-name">Store Name</label>
+                                        <input type="text" id="store-name" value="YashStore">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="store-description">Store Description</label>
+                                        <textarea id="store-description" rows="3">Premium handcrafted earrings collection</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="currency">Currency</label>
+                                        <select id="currency">
+                                            <option value="USD">USD ($)</option>
+                                            <option value="LKR" selected>LKR (Rs)</option>
+                                            <option value="EUR">EUR (€)</option>
+                                            <option value="GBP">GBP (£)</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="whatsapp-number">WhatsApp Number</label>
+                                        <input type="text" id="whatsapp-number" value="94771482950">
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="submit" class="admin-btn">Save Settings</button>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="form-group">
-                                <label for="admin-email">Email Address</label>
-                                <input type="email" id="admin-email" value="admin@example.com">
+                            
+                            <!-- Admin Account Card -->
+                            <div class="settings-card">
+                                <h2>Admin Account</h2>
+                                <form id="admin-settings-form" class="settings-form">
+                                    <div class="form-group">
+                                        <label for="admin-name">Admin Name</label>
+                                        <input type="text" id="admin-name" value="Admin">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="admin-email">Email Address</label>
+                                        <input type="email" id="admin-email" value="admin@example.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="current-password">Current Password</label>
+                                        <input type="password" id="current-password">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="new-password">New Password</label>
+                                        <input type="password" id="new-password">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirm-password">Confirm Password</label>
+                                        <input type="password" id="confirm-password">
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="submit" class="admin-btn">Update Account</button>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="form-group">
-                                <label for="current-password">Current Password</label>
-                                <input type="password" id="current-password">
+                            
+                            <!-- Display Options Card -->
+                            <div class="settings-card">
+                                <h2>Display Options</h2>
+                                <form id="display-settings-form" class="settings-form">
+                                    <div class="form-group">
+                                        <label>Theme Mode</label>
+                                        <div class="theme-selector">
+                                            <div class="theme-option">
+                                                <input type="radio" id="theme-light" name="theme" value="light" checked>
+                                                <label for="theme-light">Light</label>
+                                            </div>
+                                            <div class="theme-option">
+                                                <input type="radio" id="theme-dark" name="theme" value="dark">
+                                                <label for="theme-dark">Dark</label>
+                                            </div>
+                                            <div class="theme-option">
+                                                <input type="radio" id="theme-auto" name="theme" value="auto">
+                                                <label for="theme-auto">Auto (System)</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="products-per-page">Products Per Page</label>
+                                        <select id="products-per-page">
+                                            <option value="10">10</option>
+                                            <option value="20" selected>20</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="submit" class="admin-btn">Save Display Settings</button>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="form-group">
-                                <label for="new-password">New Password</label>
-                                <input type="password" id="new-password">
-                            </div>
-                            <div class="form-group">
-                                <label for="confirm-password">Confirm Password</label>
-                                <input type="password" id="confirm-password">
-                            </div>
-                            <div class="form-actions">
-                                <button type="submit" class="admin-btn">Update Account</button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
