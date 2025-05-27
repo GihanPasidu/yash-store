@@ -29,10 +29,10 @@ body {
     line-height: 1.6;
     color: var(--dark-color);
     background-color: var(--light-color);
-    background-image: url('https://i.pinimg.com/236x/07/e6/3d/07e63dd9693c5bc4b63ac3be3078f41c.jpg');
+    background-image: url('https://i.pinimg.com/736x/c2/6e/ae/c26eae7342953a805d6466315b909f28.jpg');
     background-attachment: fixed;
     background-repeat: repeat;
-    background-size: 120px;  /* Further reduced size for more elegant pattern */
+    background-size: 180px;  /* Adjusted size for better pattern visibility */
 }
 
 .container {
@@ -57,7 +57,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.92);  /* Increased opacity for more professional look */
+    background-color: rgba(255, 255, 255, 0.85);  /* Reduced opacity for better background visibility */
     z-index: -1;
 }
 
