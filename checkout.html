@@ -173,8 +173,11 @@
                     cart.forEach(item => {
                         const itemTotal = item.price * item.quantity;
                         cartTotal += itemTotal;
-                        // Use original item names without modification on Netlify
-                        cartItems.push(`${item.name} x${item.quantity} - Rs ${itemTotal.toFixed(2)}`);
+                        // Get product from global products array to access category information
+                        const product = window.products.find(p => p.id === item.id);
+                        const category = product ? product.category || 'Uncategorized' : 'Uncategorized';
+                        // Include category in the item description
+                        cartItems.push(`${item.name} (${category}) x${item.quantity} - Rs ${itemTotal.toFixed(2)}`);
                     });
                     
                     // Create WhatsApp message
