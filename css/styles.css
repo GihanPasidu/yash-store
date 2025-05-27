@@ -107,6 +107,12 @@ body {
     transition: background-color 0.3s ease;
 }
 
+/* Disable the overlay in dark mode for a cleaner look */
+[data-theme="dark"] .page-content::before {
+    opacity: 0;
+    /* Alternative approach: you can use display: none; or visibility: hidden; instead */
+}
+
 /* Typography */
 h1, h2, h3, h4 {
     font-family: 'Playfair Display', serif;
