@@ -386,146 +386,6 @@ function displayCart() {
     }
 }
 
-// Improved image loading handler
-function handleImageLoad(img) {
-    // Make sure the image has the proper error handler
-    if (!img.hasAttribute('onerror')) {
-        img.setAttribute('onerror', "this.src='https://via.placeholder.com/300x300?text=Earrings'");
-    }
-    
-    // Add success handler
-    img.onload = () => {
-        img.classList.add('loaded');
-        // Remove loading state from parent container
-        if (img.parentElement && img.parentElement.classList.contains('loading')) {
-            img.parentElement.classList.remove('loading');
-        }
-    };
-    
-    // If image is already complete, mark it as loaded
-    if (img.complete) {
-        img.classList.add('loaded');
-        if (img.parentElement && img.parentElement.classList.contains('loading')) {
-            img.parentElement.classList.remove('loading');
-        }
-    }
-}
-
-// Enhanced product details page initialization
-function initializeProductPage() {
-    console.log('Initializing product details page');
-    
-    try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const productId = parseInt(urlParams.get('id'));
-        
-        console.log('Product ID from URL:', productId);
-        
-        if (!productId) {
-            console.warn('No product ID found in URL parameters');
-            window.location.href = 'products.html';
-            return;
-        }
-        
-        // Get product from window.products (the global object)
-        const product = window.products.find(p => p.id === productId);
-        
-        if (!product) {
-            console.error('Product not found with ID:', productId);
-            window.location.href = 'products.html';
-            return;
-        }
-        
-        const productDetails = document.getElementById('product-details');
-        
-        if (!productDetails) {
-            console.error('Product details container not found');
-            return;
-        }
-        
-        console.log('Rendering product details for:', product.name);
-        
-        // Add a slight delay to simulate loading (optional)
-        setTimeout(() => {
-            productDetails.innerHTML = `
-                <div class="product-details">
-                    <div class="product-image">
-                        <img src="${product.image}" alt="${product.name}" 
-                             onerror="this.src='https://via.placeholder.com/500x500?text=Earrings'; this.classList.add('loaded');">
-                    </div>
-                    <div class="product-info">
-                        <h1>${product.name}</h1>
-                        <p class="price">Rs ${product.price.toFixed(2)}</p>
-                        <div class="product-description">
-                            <p>${product.description}</p>
-                            <p>These beautiful earrings are perfect for any occasion, from casual outings to formal events. Each piece is carefully crafted to ensure the highest quality.</p>
-                        </div>
-                        <div class="product-features">
-                            <h3>Features</h3>
-                            <ul class="features-list">
-                                <li>High-quality materials</li>
-                                <li>Handcrafted design</li>
-                                <li>Comfortable to wear</li>
-                                <li>Elegant packaging</li>
-                            </ul>
-                        </div>
-                        <div class="product-actions">
-                            <button id="add-to-cart-btn" class="btn" data-id="${product.id}">Add to Cart</button>
-                            <button class="wishlist-btn" title="Add to Wishlist"><i class="far fa-heart"></i></button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            const img = productDetails.querySelector('img');
-            handleImageLoad(img);
-            
-            // Add event listener for add to cart button with multiple approaches
-            const addToCartBtn = document.getElementById('add-to-cart-btn');
-            
-            if (addToCartBtn) {
-                console.log('Found Add to Cart button, adding click listener');
-                
-                // Use both approaches to maximize chances of working
-                addToCartBtn.onclick = function() {
-                    const id = parseInt(this.getAttribute('data-id'));
-                    console.log('Add to cart button clicked (via onclick) with ID:', id);
-                    addToCart(id);
-                };
-                
-                addToCartBtn.addEventListener('click', function() {
-                    const id = parseInt(this.getAttribute('data-id'));
-                    console.log('Add to cart button clicked (via addEventListener) with ID:', id);
-                    addToCart(id);
-                });
-            } else {
-                console.error('Add to cart button not found after DOM update');
-            }
-            
-            // Add wishlist functionality (currently just visual)
-            const wishlistBtn = document.querySelector('.wishlist-btn');
-            if (wishlistBtn) {
-                wishlistBtn.addEventListener('click', function() {
-                    const icon = this.querySelector('i');
-                    if (icon.classList.contains('far')) {
-                        icon.classList.remove('far');
-                        icon.classList.add('fas');
-                        icon.style.color = '#e74c3c';
-                        showNotification('Added to wishlist!', 'success');
-                    } else {
-                        icon.classList.remove('fas');
-                        icon.classList.add('far');
-                        icon.style.color = '';
-                        showNotification('Removed from wishlist', 'info');
-                    }
-                });
-            }
-        }, 300);
-    } catch (error) {
-        console.error('Error initializing product page:', error);
-    }
-}
-
 // Filter products by category function
 function filterProductsByCategory(category) {
     console.log(`Filtering products by category: ${category}`);
@@ -565,6 +425,32 @@ function filterProductsByCategory(category) {
         } else {
             // Render the filtered products
             displayProducts(filteredProducts);
+            
+            // Add extra handling for image loading after filtering
+            setTimeout(() => {
+                const productImages = productsGrid.querySelectorAll('.product-image img');
+                productImages.forEach(img => {
+                    handleImageLoad(img);
+                    
+                    // Force load images that might be stuck
+                    if (!img.complete || img.naturalHeight === 0) {
+                        const originalSrc = img.src;
+                        img.src = '';  // Reset source to trigger load
+                        setTimeout(() => {
+                            img.src = originalSrc;
+                        }, 50);
+                    }
+                });
+                
+                // Remove loading state from product-image containers
+                productsGrid.querySelectorAll('.product-image.loading').forEach(container => {
+                    if (container.querySelector('img.loaded') || container.querySelector('img').complete) {
+                        container.classList.remove('loading');
+                    }
+                });
+                
+                console.log(`Image loading handlers applied to ${productImages.length} filtered product images`);
+            }, 200);
         }
     }, 300); // Small delay for better UX
 }
@@ -686,74 +572,152 @@ function displayProducts(filteredProducts = null) {
     console.log(`Products rendering completed. Displayed ${productsToDisplay.length} products.`);
 }
 
-// Enhanced notification system
-function showNotification(message, type = 'success') {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.innerHTML = `
-        <div class="notification-content">
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-            <span>${message}</span>
-        </div>
-    `;
+// Improved image loading handler
+function handleImageLoad(img) {
+    // Make sure the image has the proper error handler
+    if (!img.hasAttribute('onerror')) {
+        img.setAttribute('onerror', "this.src='https://via.placeholder.com/300x300?text=Earrings'; this.classList.add('loaded');");
+    }
     
-    document.body.appendChild(notification);
+    // Add success handler
+    img.onload = () => {
+        img.classList.add('loaded');
+        // Remove loading state from parent container
+        if (img.parentElement && img.parentElement.classList.contains('loading')) {
+            img.parentElement.classList.remove('loading');
+        }
+    };
     
-    requestAnimationFrame(() => {
-        notification.classList.add('show');
-    });
-    
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
-}
-
-// Mobile menu handler
-document.querySelector('.mobile-menu-toggle')?.addEventListener('click', function() {
-    const nav = document.querySelector('nav ul');
-    this.classList.toggle('active');
-    nav.classList.toggle('active');
-});
-
-// Set up a more efficient image lazy loading
-function setupEfficientLazyLoading() {
-    // Use native lazy loading where supported
-    if ('loading' in HTMLImageElement.prototype) {
-        document.querySelectorAll('img:not([loading])').forEach(img => {
-            img.loading = 'lazy';
-        });
+    // If image is already complete, mark it as loaded
+    if (img.complete) {
+        img.classList.add('loaded');
+        if (img.parentElement && img.parentElement.classList.contains('loading')) {
+            img.parentElement.classList.remove('loading');
+        }
     } else {
-        // Fallback with Intersection Observer
-        const lazyImages = document.querySelectorAll('img:not([loading="eager"])');
-        const imageObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    if (img.dataset.src) {
-                        img.src = img.dataset.src;
-                        img.removeAttribute('data-src');
-                    }
-                    img.classList.add('loaded');
-                    imageObserver.unobserve(img);
-                }
-            });
-        });
-        
-        lazyImages.forEach(img => {
-            // Store src in data-src and clear src for true lazy loading
-            if (!img.dataset.src && img.src && !img.src.includes('data:image')) {
-                img.dataset.src = img.src;
-                img.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"%3E%3C/svg%3E';
-                imageObserver.observe(img);
-            }
-        });
+        // If not complete, ensure parent has loading class
+        if (img.parentElement) {
+            img.parentElement.classList.add('loading');
+        }
     }
 }
 
-// Initialize checkout
+// Enhanced product details page initialization
+function initializeProductPage() {
+    console.log('Initializing product details page');
+    
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = parseInt(urlParams.get('id'));
+        
+        console.log('Product ID from URL:', productId);
+        
+        if (!productId) {
+            console.warn('No product ID found in URL parameters');
+            window.location.href = 'products.html';
+            return;
+        }
+        
+        // Get product from window.products (the global object)
+        const product = window.products.find(p => p.id === productId);
+        
+        if (!product) {
+            console.error('Product not found with ID:', productId);
+            window.location.href = 'products.html';
+            return;
+        }
+        
+        const productDetails = document.getElementById('product-details');
+        
+        if (!productDetails) {
+            console.error('Product details container not found');
+            return;
+        }
+        
+        console.log('Rendering product details for:', product.name);
+        
+        // Add a slight delay to simulate loading (optional)
+        setTimeout(() => {
+            productDetails.innerHTML = `
+                <div class="product-details">
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}" 
+                             onerror="this.src='https://via.placeholder.com/500x500?text=Earrings'; this.classList.add('loaded');">
+                    </div>
+                    <div class="product-info">
+                        <h1>${product.name}</h1>
+                        <p class="price">Rs ${product.price.toFixed(2)}</p>
+                        <div class="product-description">
+                            <p>${product.description}</p>
+                            <p>These beautiful earrings are perfect for any occasion, from casual outings to formal events. Each piece is carefully crafted to ensure the highest quality.</p>
+                        </div>
+                        <div class="product-features">
+                            <h3>Features</h3>
+                            <ul class="features-list">
+                                <li>High-quality materials</li>
+                                <li>Handcrafted design</li>
+                                <li>Comfortable to wear</li>
+                                <li>Elegant packaging</li>
+                            </ul>
+                        </div>
+                        <div class="product-actions">
+                            <button id="add-to-cart-btn" class="btn" data-id="${product.id}">Add to Cart</button>
+                            <button class="wishlist-btn" title="Add to Wishlist"><i class="far fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            const img = productDetails.querySelector('img');
+            handleImageLoad(img);
+            
+            // Add event listener for add to cart button with multiple approaches
+            const addToCartBtn = document.getElementById('add-to-cart-btn');
+            
+            if (addToCartBtn) {
+                console.log('Found Add to Cart button, adding click listener');
+                
+                // Use both approaches to maximize chances of working
+                addToCartBtn.onclick = function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    console.log('Add to cart button clicked (via onclick) with ID:', id);
+                    addToCart(id);
+                };
+                
+                addToCartBtn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    console.log('Add to cart button clicked (via addEventListener) with ID:', id);
+                    addToCart(id);
+                });
+            } else {
+                console.error('Add to cart button not found after DOM update');
+            }
+            
+            // Add wishlist functionality (currently just visual)
+            const wishlistBtn = document.querySelector('.wishlist-btn');
+            if (wishlistBtn) {
+                wishlistBtn.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('far')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        icon.style.color = '#e74c3c';
+                        showNotification('Added to wishlist!', 'success');
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        icon.style.color = '';
+                        showNotification('Removed from wishlist', 'info');
+                    }
+                });
+            }
+        }, 300);
+    } catch (error) {
+        console.error('Error initializing product page:', error);
+    }
+}
+
+// Checkout page initialization
 function initializeCheckout() {
     const checkoutForm = document.getElementById('checkout-form');
     
