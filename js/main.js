@@ -916,7 +916,7 @@ function updateCartForNetlify() {
     }
 }
 
-// Theme management functionality
+// Theme management functionality - updated to prioritize light theme by default
 function initThemeManagement() {
     const themeToggle = document.getElementById('theme-toggle');
     const themeColorMeta = document.getElementById('theme-color-meta');
@@ -937,12 +937,14 @@ function initThemeManagement() {
         }
     }
     
-    // Check for saved theme preference or use system preference
+    // Check for saved theme preference or use light theme as default
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
+        // Use saved theme if exists
         setTheme(savedTheme);
-    } else if (prefersDarkScheme.matches) {
-        setTheme('dark');
+    } else {
+        // Force light theme as default, regardless of system preference
+        setTheme('light');
     }
     
     // Handle theme toggle button click
@@ -953,14 +955,17 @@ function initThemeManagement() {
         });
     }
     
-    // Listen for system preference changes
+    // Don't automatically switch based on system preference
+    // but still listen for changes for users who explicitly set a theme
     prefersDarkScheme.addEventListener('change', (e) => {
+        // Only change theme based on system preference if user has never explicitly set a theme
         if (!localStorage.getItem('theme')) {
-            setTheme(e.matches ? 'dark' : 'light');
+            // Still using light theme as default
+            setTheme('light');
         }
     });
     
-    console.log('Theme management initialized');
+    console.log('Theme management initialized with light theme default');
 }
 
 // Optimize the document ready handler to be more efficient
