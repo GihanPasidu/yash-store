@@ -282,7 +282,7 @@ header .container {
     background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('../images/hero-bg.jpg');
     background-size: cover;
     background-position: center;
-    color: white;
+    color: rgb(255, 255, 255);
     padding: 120px 0;  /* Increased padding for more impact */
     text-align: center;
     position: relative;
@@ -300,6 +300,7 @@ header .container {
     margin-bottom: 20px;
     text-shadow: 0 2px 5px rgba(0,0,0,0.3);
     letter-spacing: 1px;
+    color: #ffffff !important; /* Force white text regardless of theme */
 }
 
 .hero-content p {
@@ -308,7 +309,13 @@ header .container {
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.9) !important; /* Force light text regardless of theme */
+    text-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Add subtle text shadow for better readability */
+}
+
+/* Ensure hero button text is also always light */
+.hero-content .btn {
+    color: #ffffff !important;
 }
 
 /* Product Cards */
